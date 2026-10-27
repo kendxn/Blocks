@@ -1,0 +1,288 @@
+/* ==========================================================================
+   REVOLVE BLOCKS - TUTORIAL CSS (CLEAN BOARD VIEW & ENLARGED TEXT)
+   ========================================================================== */
+
+/* Tutorial Text Container with Pixel-Art Frame Asset */
+#tutorial-banner {
+  position: fixed;
+  top: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 92%;
+  max-width: 440px;
+  background: url('../assets/tutorial_frame.png') no-repeat center center / 100% 100%;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  border: none;
+  border-radius: 0;
+  box-shadow: 0 10px 32px rgba(0, 0, 0, 0.75);
+  padding: 24px 26px 26px 26px;
+  z-index: 100000;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 10px;
+  font-family: 'Press Start 2P', monospace, sans-serif;
+  color: #ffffff;
+  pointer-events: auto;
+  user-select: none;
+  animation: tutorialBannerEnter 0.22s ease-out forwards;
+  box-sizing: border-box;
+  transition: top 0.25s ease, transform 0.25s ease;
+}
+
+#tutorial-banner.bottom-pos {
+  top: auto;
+  bottom: 16px;
+  animation: tutorialBannerEnterBottom 0.22s ease-out forwards;
+}
+
+@keyframes tutorialBannerEnter {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -10px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0) scale(1);
+  }
+}
+
+@keyframes tutorialBannerEnterBottom {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 10px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0) scale(1);
+  }
+}
+
+.tutorial-mask-content {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Header with Step Tag & Skip Button */
+.tutorial-banner-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  padding-bottom: 10px;
+}
+
+.tutorial-step-tag {
+  font-size: 13px;
+  color: #38bdf8;
+  letter-spacing: 1px;
+  text-shadow: 1px 1px 0 #000;
+}
+
+.tutorial-skip-btn {
+  background: rgba(239, 68, 68, 0.2);
+  border: 1px solid rgba(239, 68, 68, 0.6);
+  color: #fca5a5;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 11px;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  letter-spacing: 0.5px;
+  transition: all 0.15s ease;
+}
+
+.tutorial-skip-btn:active {
+  transform: scale(0.92);
+  background: #ef4444;
+  color: #ffffff;
+}
+
+/* Banner Title & Message (Pixel Art Large Font) */
+.tutorial-title {
+  font-size: 16px;
+  color: #ffffff;
+  line-height: 1.5;
+  text-shadow: 2px 2px 0 #000;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  min-height: 24px;
+}
+
+.tutorial-desc {
+  font-size: 14px;
+  line-height: 1.75;
+  color: #f1f5f9;
+  text-shadow: 1.5px 1.5px 0 #000;
+  letter-spacing: 0.4px;
+  white-space: pre-line;
+  min-height: 48px;
+}
+
+/* Typewriter Effect Blinking Cursor */
+.typewriter-cursor {
+  display: inline-block;
+  color: #38bdf8;
+  margin-left: 2px;
+  animation: typewriterBlink 0.65s steps(2, start) infinite;
+  vertical-align: middle;
+}
+
+@keyframes typewriterBlink {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0;
+  }
+}
+
+/* Target Pulsing Highlight (Golden Glow without any dark mask blocking board) */
+.tutorial-target-highlight {
+  outline: 3px solid #ffe082 !important;
+  box-shadow: 0 0 18px #ffe082, inset 0 0 10px rgba(255, 224, 130, 0.5) !important;
+  animation: tutorialPulse 1.1s infinite alternate !important;
+  z-index: 50 !important;
+}
+
+@keyframes tutorialPulse {
+  0% {
+    outline-color: #ffe082;
+    box-shadow: 0 0 8px #ffe082;
+  }
+
+  100% {
+    outline-color: #ffffff;
+    box-shadow: 0 0 24px #ffe082;
+  }
+}
+
+/* Dimmed Slot - Soft visual hint for slots not needed in this step */
+.tutorial-dimmed-slot {
+  opacity: 0.35 !important;
+  transition: opacity 0.2s ease;
+}
+
+/* Final Completion Modal - Clean Opaque Backdrop, No Yellow Frame */
+.tutorial-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  z-index: 100005;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 16px;
+  user-select: none;
+  animation: tutorialFadeIn 0.18s ease-out;
+}
+
+@keyframes tutorialFadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+.tutorial-modal-box {
+  background: url('../assets/tutorial_frame.png') no-repeat center center / 100% 100%;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  border: none;
+  border-radius: 0;
+  width: 90%;
+  max-width: 420px;
+  padding: 30px 26px 28px 26px;
+  text-align: center;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.9);
+  font-family: 'Press Start 2P', monospace;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+.tutorial-modal-icon {
+  font-size: 42px;
+}
+
+.tutorial-modal-title {
+  font-size: 16px;
+  color: #38bdf8;
+  line-height: 1.45;
+  text-shadow: 2px 2px 0 #000;
+}
+
+.tutorial-modal-desc {
+  font-size: 13px;
+  color: #f1f5f9;
+  line-height: 1.75;
+  text-shadow: 1px 1px 0 #000;
+}
+
+.tutorial-modal-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  margin-top: 6px;
+}
+
+.tutorial-modal-buttons.two-btns {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+}
+
+.tutorial-modal-buttons .settings-pixel-btn {
+  width: 100%;
+}
+
+.tutorial-btn-primary {
+  background: #388e3c;
+  color: #ffffff;
+  border: 2px solid #81c784;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 12px;
+  padding: 13px;
+  border-radius: 6px;
+  cursor: pointer;
+  box-shadow: 0 4px 0 #1b5e20;
+  text-shadow: 1px 1px 0 #000;
+}
+
+.tutorial-btn-primary:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 #1b5e20;
+}
+
+.tutorial-btn-secondary {
+  background: #37474f;
+  color: #ffffff;
+  border: 2px solid #78909c;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 11.5px;
+  padding: 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  box-shadow: 0 4px 0 #212121;
+  text-shadow: 1px 1px 0 #000;
+}
+
+.tutorial-btn-secondary:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 #212121;
+}

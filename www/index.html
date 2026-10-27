@@ -1,0 +1,1055 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Revolve Blocks</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Silkscreen:wght@400;700&display=swap"
+        rel="stylesheet">
+    <link rel="icon" type="image/png" href="assets/app_icon.png">
+    <link rel="apple-touch-icon" href="assets/app_icon.png">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/shop-render.css">
+    <link rel="stylesheet" href="css/home-render.css">
+    <link rel="stylesheet" href="css/tutorial.css">
+    <!-- Google Publisher Tag (Official Google Test Ads for Web / Browser Preview) -->
+    <script>
+        // Blocca rigorosamente l'orientamento verticale (portrait)
+        function enforcePortraitOrientation() {
+            if (screen.orientation && typeof screen.orientation.lock === 'function') {
+                screen.orientation.lock('portrait').catch(function () {
+                    if (screen.orientation.lock) {
+                        screen.orientation.lock('portrait-primary').catch(function () {});
+                    }
+                });
+            }
+        }
+        enforcePortraitOrientation();
+        window.addEventListener('pointerdown', enforcePortraitOrientation, { passive: true });
+        window.addEventListener('touchstart', enforcePortraitOrientation, { passive: true });
+        window.addEventListener('click', enforcePortraitOrientation, { passive: true });
+        window.addEventListener('orientationchange', enforcePortraitOrientation, { passive: true });
+    </script>
+    <script async src="https://securepubads.g.doubleclick.net/tag/js/gpt.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <!-- Game Loading Splash Screen (REVOLVR) -->
+    <div id="game-splash-screen">
+        <div class="splash-logo-container">
+            <img src="assets/splash_logo.png" alt="REVOLVR" class="splash-logo-img">
+        </div>
+    </div>
+
+    <!-- Global Retro Pixel FPS Counter Badge & Quick Tools (Center) -->
+    <div class="top-dev-bar" style="display: none;">
+        <div id="sub-tray-menu-container" class="sub-tray-menu-container" style="display: none;">
+            <button id="sub-tray-toggle-btn" class="sub-tray-toggle-btn" aria-expanded="false" title="Strumenti Rapidi">
+                <span class="sub-tray-toggle-icon">⚡</span>
+                <span class="sub-tray-toggle-title">STRUMENTI</span>
+                <span class="sub-tray-arrow-icon" id="sub-tray-arrow">▼</span>
+            </button>
+            <div id="sub-tray-content" class="sub-tray-content collapsed">
+                <div class="sub-tray-buttons-grid">
+                    <button id="btn-increase-combo" class="sub-tray-action-btn btn-purple" style="grid-column: span 2;">
+                        <span class="btn-emoji">🔥</span>
+                        <span>AUMENTA COMBO (+1)</span>
+                    </button>
+                    <button id="btn-complete-random-quest" class="sub-tray-action-btn btn-green"
+                        style="grid-column: span 2;">
+                        <span class="btn-emoji">📜</span>
+                        <span>COMPLETA 1 QUEST RANDOM</span>
+                    </button>
+                    <button id="btn-trigger-tutorial" class="sub-tray-action-btn btn-yellow"
+                        style="grid-column: span 2;">
+                        <span class="btn-emoji">🎓</span>
+                        <span>START TUTORIAL</span>
+                    </button>
+                    <button id="btn-trigger-gameover" class="sub-tray-action-btn btn-danger">
+                        <span class="btn-emoji">☠️</span>
+                        <span>GAME OVER</span>
+                    </button>
+                    <button id="btn-trigger-win" class="sub-tray-action-btn btn-yellow">
+                        <span class="btn-emoji">🏆</span>
+                        <span>VITTORIA</span>
+                    </button>
+                    <button id="btn-test-admob-interstitial" class="sub-tray-action-btn btn-blue"
+                        style="grid-column: span 2;">
+                        <span class="btn-emoji">🎬</span>
+                        <span>TEST INTERSTITIAL (ADMOB)</span>
+                    </button>
+                    <button id="btn-test-admob-rewarded" class="sub-tray-action-btn btn-green"
+                        style="grid-column: span 2;">
+                        <span class="btn-emoji">🎁</span>
+                        <span>TEST REWARDED VIDEO (ADMOB)</span>
+                    </button>
+                    <button id="btn-test-admob-consent" class="sub-tray-action-btn btn-purple"
+                        style="grid-column: span 2;">
+                        <span class="btn-emoji">📋</span>
+                        <span>TEST CONSENSO UMP (GDPR)</span>
+                    </button>
+                    <button id="btn-test-reset-free-tickets" class="sub-tray-action-btn btn-yellow"
+                        style="grid-column: span 2;">
+                        <span class="btn-emoji">🔄</span>
+                        <span>RESET FREE TICKETS (DAILY)</span>
+                    </button>
+                    <button id="btn-trigger-revive" class="sub-tray-action-btn btn-green">
+                        <span class="btn-emoji">💖</span>
+                        <span>REVIVE TEST</span>
+                    </button>
+                    <button id="btn-open-clear-rows-modal" class="sub-tray-action-btn btn-clear-rows">
+                        <span class="btn-emoji">🧹</span>
+                        <span>ELIMINA RIGHE</span>
+                    </button>
+                    <button id="btn-clear-1-random-row" class="sub-tray-action-btn btn-purple">
+                        <span class="btn-emoji">🧹</span>
+                        <span>1 RIGA TEST</span>
+                    </button>
+                    <button id="btn-clear-2-random-rows" class="sub-tray-action-btn btn-purple">
+                        <span class="btn-emoji">⚡</span>
+                        <span>2 RIGHE TEST</span>
+                    </button>
+                    <button id="btn-clear-4x4-slot" class="sub-tray-action-btn btn-purple">
+                        <span class="btn-emoji">🍩</span>
+                        <span>4X4 SLOT TEST</span>
+                    </button>
+                    <button id="btn-buy-all-skills" class="sub-tray-action-btn btn-purple">
+                        <span class="btn-emoji">⭐</span>
+                        <span>COMPRA TUTTO SHOP</span>
+                    </button>
+                    <button id="btn-toggle-banana" class="sub-tray-action-btn btn-yellow">
+                        <span class="btn-emoji">🍌</span>
+                        <span>TOGGLE BANANA</span>
+                    </button>
+                    <button id="btn-toggle-pizza" class="sub-tray-action-btn btn-orange">
+                        <span class="btn-emoji">🍕</span>
+                        <span>TOGGLE PIZZA</span>
+                    </button>
+                    <button id="btn-fill-board-40" class="sub-tray-action-btn btn-orange">
+                        <span class="btn-emoji">🎲</span>
+                        <span>RIEMPI 40%</span>
+                    </button>
+                    <button id="btn-fill-board-60" class="sub-tray-action-btn btn-orange">
+                        <span class="btn-emoji">🎲</span>
+                        <span>RIEMPI 60%</span>
+                    </button>
+                    <button id="btn-fill-board-80" class="sub-tray-action-btn btn-orange">
+                        <span class="btn-emoji">🎲</span>
+                        <span>RIEMPI 80%</span>
+                    </button>
+                    <button id="btn-trigger-magic-blue-row" class="sub-tray-action-btn btn-blue">
+                        <span class="btn-emoji">🫐</span>
+                        <span>MAGIC BLUE</span>
+                    </button>
+                    <button id="btn-trigger-sakura-pink" class="sub-tray-action-btn btn-pink">
+                        <span class="btn-emoji">🌸</span>
+                        <span>SAKURA PINK</span>
+                    </button>
+                    <button id="btn-trigger-reactive-orange" class="sub-tray-action-btn btn-orange">
+                        <span class="btn-emoji">🍊</span>
+                        <span>REACTIVE ORANGE</span>
+                    </button>
+                    <button id="btn-trigger-overgrow-green" class="sub-tray-action-btn btn-green">
+                        <span class="btn-emoji">🌿</span>
+                        <span>OVERGROW GREEN</span>
+                    </button>
+                    <button id="btn-trigger-amplifying-purple" class="sub-tray-action-btn btn-purple">
+                        <span class="btn-emoji">🔮</span>
+                        <span>AMPLIFYING PURPLE</span>
+                    </button>
+                    <button id="btn-trigger-lava-red" class="sub-tray-action-btn btn-red">
+                        <span class="btn-emoji">🌋</span>
+                        <span>LAVA RED</span>
+                    </button>
+                    <button id="btn-trigger-shining-tomato" class="sub-tray-action-btn btn-red">
+                        <span class="btn-emoji">🍅</span>
+                        <span>SHINING TOMATO</span>
+                    </button>
+                    <button id="btn-place-piece-earn-coins" class="sub-tray-action-btn btn-yellow">
+                        <span class="btn-emoji">🪙</span>
+                        <span>POSIZIONA PEZZO + MONETE</span>
+                    </button>
+                    <button id="btn-trigger-clear-3-rainbow-rows" class="sub-tray-action-btn btn-rainbow">
+                        <span class="btn-emoji">🌈</span>
+                        <span>3 RIGHE ARCOBALENO</span>
+                    </button>
+                    <button id="btn-test-haptic-vibration" class="sub-tray-action-btn btn-purple">
+                        <span class="btn-emoji">📳</span>
+                        <span>TEST VIBRAZIONE</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="game-fps-badge" id="gameFpsCounter">60 FPS</div>
+    </div>
+
+    <!-- Dynamic Dark Blue Checkerboard Gameplay Background (Hidden initially while on home screen) -->
+    <div id="game-dynamic-bg" class="sfondo-dinamico-game" style="display: none;"></div>
+
+    <!-- RETRO WALKMAN HOME SCREEN -->
+    <div id="home-screen">
+        <div id="home-balatro-bg-container"
+            style="display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; overflow: hidden;">
+        </div>
+        <div class="sfondo-dinamico"></div>
+        <div class="background-grid"></div>
+
+        <main class="mobile-container">
+            <!-- Top Status Bar (HUD) -->
+            <header class="hud-bar">
+                <!-- Crown Record Score -->
+                <div class="hud-item crown-item">
+                    <img src="assets/crown_icon.png" alt="Crown" class="hud-icon crown-icon">
+                    <div class="hud-text-single">
+                        <span class="hud-val" id="record-count">0</span>
+                    </div>
+                </div>
+
+                <!-- Ticket Count -->
+                <div class="hud-item ticket-item">
+                    <img src="assets/ticket.png" alt="Ticket" class="hud-icon ticket-icon">
+                    <div class="hud-text-single">
+                        <span class="hud-ticket-val" id="ticket-count">x99</span>
+                    </div>
+                </div>
+
+                <!-- Settings Button -->
+                <button class="setting-btn" id="home-setting-btn" aria-label="Settings">
+                    <img src="assets/setting-button.png" alt="Settings">
+                </button>
+            </header>
+
+
+            <!-- HOME VIEW (Cassette Carousel & Action Buttons) -->
+            <div class="main-view-section view-active" id="home-view">
+                <!-- Cassette Level/Score Header -->
+                <div class="cassette-info-header">
+                    <img src="assets/star-icon.png" alt="Header Icon" class="star-icon" id="header-icon">
+                    <span class="tape-level" id="tape-level">LVL 3K</span>
+                </div>
+
+                <!-- Cassette Selector Carousel Row -->
+                <section class="cassette-selector">
+                    <button class="arrow-btn left-arrow" id="prev-cassette" aria-label="Cassetta Precedente">
+                        <img src="assets/freccia-sinistra-removebg-preview.png" alt="Freccia Sinistra">
+                    </button>
+
+                    <div class="cassette-display" id="cassette-display">
+                        <div class="cassette-stack-wrapper">
+                            <img src="assets/cassette-3.png" alt="Previous Cassette Peek"
+                                class="cassette-peek peek-left" id="peek-left-img" draggable="false">
+
+                            <div class="cassette-wave-container">
+                                <img src="assets/cassette-1.png" alt="Retro Cassette Tape" class="cassette-img"
+                                    id="current-cassette-img" draggable="false">
+                            </div>
+
+                            <img src="assets/cassette-2.png" alt="Next Cassette Peek" class="cassette-peek peek-right"
+                                id="peek-right-img" draggable="false">
+                        </div>
+                    </div>
+
+                    <button class="arrow-btn right-arrow" id="next-cassette" aria-label="Cassetta Successiva">
+                        <img src="assets/freccia-destra-removebg-preview.png" alt="Freccia Destra">
+                    </button>
+                </section>
+
+                <!-- Tape Type Title Label -->
+                <div class="cassette-title-label" id="tape-title">Classic Tape</div>
+
+                <!-- Main Action Buttons Row -->
+                <section class="action-row">
+                    <button class="play-btn" id="home-play-btn" aria-label="Play Game">
+                        <img src="assets/playbutton.png" alt="PLAY">
+                    </button>
+                    <button class="gamemode-btn" id="gamemode-btn" aria-label="Game Modes">
+                        <img src="assets/modes-button.png" alt="Game Modes">
+                    </button>
+                </section>
+            </div>
+
+            <!-- DAILY QUESTS VIEW -->
+            <div class="main-view-section hidden" id="daily-view">
+                <div class="daily-quests-container" id="quests-scroll-area">
+                    <div class="pixel-title daily-quests-title text-wave" data-text="DAILY QUESTS"
+                        style="--wave-duration: 2.6s;">
+                        <span class="wave-char" style="--char-idx: 0">D</span><span class="wave-char"
+                            style="--char-idx: 1">A</span><span class="wave-char" style="--char-idx: 2">I</span><span
+                            class="wave-char" style="--char-idx: 3">L</span><span class="wave-char"
+                            style="--char-idx: 4">Y</span><span class="wave-char wave-space"
+                            style="--char-idx: 5">&nbsp;</span><span class="wave-char"
+                            style="--char-idx: 6">Q</span><span class="wave-char" style="--char-idx: 7">U</span><span
+                            class="wave-char" style="--char-idx: 8">E</span><span class="wave-char"
+                            style="--char-idx: 9">S</span><span class="wave-char" style="--char-idx: 10">T</span><span
+                            class="wave-char" style="--char-idx: 11">S</span>
+                    </div>
+                </div>
+                <div class="scroll-dots-indicator" id="scroll-dots">
+                    <span class="dot">•</span>
+                    <span class="dot">•</span>
+                    <span class="dot">•</span>
+                </div>
+            </div>
+
+            <!-- SHOP VIEW -->
+            <div class="main-view-section hidden" id="shop-view">
+                <div class="shop-cards-container">
+                    <div class="pixel-title text-wave" data-text="SHOP" style="--wave-duration: 1.8s;">
+                        <span class="wave-char" style="--char-idx: 0">S</span><span class="wave-char"
+                            style="--char-idx: 1">H</span><span class="wave-char" style="--char-idx: 2">O</span><span
+                            class="wave-char" style="--char-idx: 3">P</span>
+                    </div>
+
+                    <div class="home-ticket-packs-section">
+
+                        <!-- PINK & LIGHTPINK CHECKERBOARD BG CARD -->
+                        <div class="cassette-title-label section-banner-title">BACKGROUNDS</div>
+
+                        <div class="item-card home-shop-card" id="pink-white-bg-shop-card">
+                            <div class="card-slot-number">01</div>
+                            <div class="card-left-col">
+                                <div class="card-icon-container">
+                                    <div class="pink-white-preview-icon"></div>
+                                </div>
+                                <span class="rarity-badge epic">THEME</span>
+                            </div>
+                            <div class="card-info">
+                                <div class="item-title">PINK</div>
+                                <div class="item-desc">UNLOCK PINK CHECKERED DYNAMIC BACKGROUND (HOME & GAME)!</div>
+                                <div class="buy-button-container">
+                                    <button class="shop-buy-btn ticket-buy-btn buy-price-btn"
+                                        id="buy-pink-white-bg-btn">
+                                        <img src="assets/ticket.png" alt="Ticket" class="btn-ticket-icon">
+                                        <span class="shop-price-text" id="pink-white-bg-btn-text">250</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- PURPLE & LIGHT PURPLE CHECKERBOARD BG CARD -->
+                        <div class="item-card home-shop-card" id="purple-white-bg-shop-card">
+                            <div class="card-slot-number">02</div>
+                            <div class="card-left-col">
+                                <div class="card-icon-container">
+                                    <div class="purple-white-preview-icon"></div>
+                                </div>
+                                <span class="rarity-badge epic">THEME</span>
+                            </div>
+                            <div class="card-info">
+                                <div class="item-title">PURPLE</div>
+                                <div class="item-desc">UNLOCK PURPLE CHECKERED DYNAMIC BACKGROUND (HOME & GAME)!</div>
+                                <div class="buy-button-container">
+                                    <button class="shop-buy-btn ticket-buy-btn buy-price-btn"
+                                        id="buy-purple-white-bg-btn">
+                                        <img src="assets/ticket.png" alt="Ticket" class="btn-ticket-icon">
+                                        <span class="shop-price-text">350</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- GREEN & LIGHT GREEN CHECKERBOARD BG CARD -->
+                        <div class="item-card home-shop-card" id="green-white-bg-shop-card">
+                            <div class="card-slot-number">03</div>
+                            <div class="card-left-col">
+                                <div class="card-icon-container">
+                                    <div class="green-white-preview-icon"></div>
+                                </div>
+                                <span class="rarity-badge epic">THEME</span>
+                            </div>
+                            <div class="card-info">
+                                <div class="item-title">GREEN</div>
+                                <div class="item-desc">UNLOCK GREEN CHECKERED DYNAMIC BACKGROUND (HOME & GAME)!</div>
+                                <div class="buy-button-container">
+                                    <button class="shop-buy-btn ticket-buy-btn buy-price-btn"
+                                        id="buy-green-white-bg-btn">
+                                        <img src="assets/ticket.png" alt="Ticket" class="btn-ticket-icon">
+                                        <span class="shop-price-text">450</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ORANGE & LIGHT ORANGE CHECKERBOARD BG CARD -->
+                        <div class="item-card home-shop-card" id="orange-white-bg-shop-card">
+                            <div class="card-slot-number">04</div>
+                            <div class="card-left-col">
+                                <div class="card-icon-container">
+                                    <div class="orange-white-preview-icon"></div>
+                                </div>
+                                <span class="rarity-badge epic">THEME</span>
+                            </div>
+                            <div class="card-info">
+                                <div class="item-title">ORANGE</div>
+                                <div class="item-desc">UNLOCK ORANGE CHECKERED DYNAMIC BACKGROUND (HOME & GAME)!</div>
+                                <div class="buy-button-container">
+                                    <button class="shop-buy-btn ticket-buy-btn buy-price-btn"
+                                        id="buy-orange-white-bg-btn">
+                                        <img src="assets/ticket.png" alt="Ticket" class="btn-ticket-icon">
+                                        <span class="shop-price-text">550</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- GOLD CHECKERBOARD BG CARD -->
+                        <div class="item-card home-shop-card" id="gold-white-bg-shop-card">
+                            <div class="card-slot-number">05</div>
+                            <div class="card-left-col">
+                                <div class="card-icon-container">
+                                    <div class="gold-white-preview-icon"></div>
+                                </div>
+                                <span class="rarity-badge epic">THEME</span>
+                            </div>
+                            <div class="card-info">
+                                <div class="item-title">GOLD</div>
+                                <div class="item-desc">UNLOCK LUXURY GOLD CHECKERED DYNAMIC BACKGROUND (HOME & GAME)!
+                                </div>
+                                <div class="buy-button-container">
+                                    <button class="shop-buy-btn ticket-buy-btn buy-price-btn"
+                                        id="buy-gold-white-bg-btn">
+                                        <img src="assets/ticket.png" alt="Ticket" class="btn-ticket-icon">
+                                        <span class="shop-price-text">650</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Remove ads card -->
+                    <div class="home-ticket-packs-section">
+
+                        <div class="cassette-title-label section-banner-title">REMOVE ADS</div>
+
+                        <div class="item-card home-shop-card" id="remove-ads-shop-card">
+                            <div class="card-slot-number">06</div>
+                            <div class="card-left-col">
+                                <div class="card-icon-container">
+                                    <img src="assets/no-ads-icon.png" alt="No Ads Icon" class="item-icon pixel-art">
+                                </div>
+                                <span class="rarity-badge epic">ADS</span>
+                            </div>
+                            <div class="card-info">
+                                <div class="item-title">REMOVE ADS</div>
+                                <div class="item-desc">Enjoy an uninterrupted gameplay experience!
+                                    all ads.</div>
+                                <div class="buy-button-container">
+                                    <button class="shop-buy-btn" id="buy-no-ads-btn">
+                                        <span class="shop-price-text">€ 3.99</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TICKET PACKS (BELOW REMOVE ADS BANNER) -->
+                    <div class="home-ticket-packs-section">
+                        <div class="cassette-title-label section-banner-title">TICKET PACKS</div>
+                        <div class="home-ticket-packs-row">
+                            <!-- Daily Reward Pack: 3 Free Tickets / 10 Tickets from Ads -->
+                            <div class="ticket-pack-card daily-reward-pack-card" id="shop-daily-gift-card">
+                                <div class="pack-badge daily-badge" id="daily-reward-badge">FREE</div>
+                                <div class="pack-icon-wrapper">
+                                    <img src="assets/ticket.png" alt="Ticket" class="pack-ticket-icon">
+                                </div>
+                                <div class="pack-amount-text" id="daily-reward-amount-text">3<br>TICKETS</div>
+                                <button class="pack-buy-btn daily-pack-btn" id="daily-reward-claim-btn">CLAIM</button>
+                            </div>
+
+                            <!-- Pack 1: 200 Tickets -->
+                            <div class="ticket-pack-card" data-tickets="200" data-price="1.99">
+                                <div class="pack-badge">STARTER</div>
+                                <div class="pack-icon-wrapper">
+                                    <img src="assets/ticket.png" alt="Ticket" class="pack-ticket-icon">
+                                </div>
+                                <div class="pack-amount-text">200<br>TICKETS</div>
+                                <button class="pack-buy-btn">€ 1.99</button>
+                            </div>
+
+                            <!-- Pack 2: 700 Tickets -->
+                            <div class="ticket-pack-card" data-tickets="700" data-price="4.99">
+                                <div class="pack-badge popular">BEST VALUE</div>
+                                <div class="pack-icon-wrapper">
+                                    <img src="assets/ticket.png" alt="Ticket" class="pack-ticket-icon">
+                                </div>
+                                <div class="pack-amount-text">700<br>TICKETS</div>
+                                <button class="pack-buy-btn">€ 4.99</button>
+                            </div>
+
+                            <!-- Pack 3: 1500 Tickets -->
+                            <div class="ticket-pack-card" data-tickets="1500" data-price="9.99">
+                                <div class="pack-badge mega">MEGA PACK</div>
+                                <div class="pack-icon-wrapper">
+                                    <img src="assets/ticket.png" alt="Ticket" class="pack-ticket-icon">
+                                </div>
+                                <div class="pack-amount-text">1500<br>TICKETS</div>
+                                <button class="pack-buy-btn">€ 9.99</button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- VAULT / TAPES INVENTORY VIEW -->
+            <div class="main-view-section hidden" id="vault-view">
+                <div class="tapes-vault-container">
+                    <div class="pixel-title text-wave" data-text="VAULT" style="--wave-duration: 1.9s;">
+                        <span class="wave-char" style="--char-idx: 0">V</span><span class="wave-char"
+                            style="--char-idx: 1">A</span><span class="wave-char" style="--char-idx: 2">U</span><span
+                            class="wave-char" style="--char-idx: 3">L</span><span class="wave-char"
+                            style="--char-idx: 4">T</span>
+                    </div>
+
+                    <!-- CASSETTE TAPES SECTION -->
+                    <div class="home-ticket-packs-section">
+                        <div class="cassette-title-label section-banner-title">TAPES SKINS</div>
+
+                        <div class="shop-card-frame vault-card-frame" id="vault-tapes-card">
+                            <div class="shop-card-header">
+                                <div class="tapes-row-3d">
+                                    <div class="tape-card-3d">
+                                        <div class="tape-img-wrapper">
+                                            <img src="assets/cassette-1.png" alt="Classic Tape"
+                                                class="vault-tape-img wave-1">
+                                        </div>
+                                    </div>
+
+                                    <div class="tape-card-3d">
+                                        <div class="tape-img-wrapper">
+                                            <img src="assets/cassette-2.png" alt="Tempo Tape"
+                                                class="vault-tape-img wave-2">
+                                        </div>
+                                    </div>
+
+                                    <div class="tape-card-3d">
+                                        <div class="tape-img-wrapper">
+                                            <img src="assets/cassette-3.png" alt="Vintage Tape"
+                                                class="vault-tape-img wave-3">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="shop-card-title">CLASSIC TAPES</div>
+                            </div>
+
+                            <div class="shop-card-desc">
+                                DEFAULT RETRO CASSETTE TAPES
+                            </div>
+
+                            <div class="shop-price-box">
+                                <button class="vault-set-btn equipped">EQUIPPED</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- BACKGROUND THEMES SELECTION SECTION -->
+                    <div class="home-ticket-packs-section" id="vault-bg-section">
+                        <div class="cassette-title-label section-banner-title">BACKGROUNDS</div>
+
+                        <!-- Single active background card matching shop card layout -->
+                        <div class="item-card home-shop-card vault-bg-shop-card" id="vault-active-bg-card">
+                            <div class="card-slot-number" id="vault-active-bg-slot">00</div>
+                            <div class="card-left-col">
+                                <div class="card-icon-container" id="vault-active-bg-icon-container">
+                                    <div class="default-blue-preview-icon" id="vault-active-bg-preview"></div>
+                                </div>
+                                <span class="rarity-badge epic">THEME</span>
+                            </div>
+                            <div class="card-info">
+                                <div class="item-title" id="vault-active-bg-title">BLUE BACKGROUND</div>
+                                <div class="item-desc" id="vault-active-bg-desc">CLASSIC RETRO BLUE CHECKERED DYNAMIC
+                                    BACKGROUND (HOME & GAME)</div>
+                                <div class="buy-button-container">
+                                    <button class="shop-buy-btn vault-change-bg-btn" id="vault-change-bg-btn"
+                                        type="button">
+                                        <span class="shop-price-text" id="vault-change-bg-btn-text">CHANGE</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Expandable Select Background Frame -->
+                        <div class="vault-bg-select-drawer hidden" id="vault-bg-select-drawer">
+                            <div class="vault-bg-select-frame">
+                                <div class="vault-bg-select-header">
+                                    <div class="vault-bg-select-title">SELECT BACKGROUND</div>
+                                </div>
+                                <div class="vault-bg-select-grid" id="vault-bg-select-grid"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Walkman Deck Section -->
+            <section class="walkman-section">
+                <div class="walkman-tabs-row">
+                    <button class="tab-btn" data-nav="shop">
+                        <img src="assets/shop-icon.png" alt="SHOP" class="tab-icon">
+                        <span class="tab-badge-new hidden" id="badge-shop">NEW</span>
+                    </button>
+                    <button class="tab-btn" data-nav="inventory">
+                        <img src="assets/inventory-icon.png" alt="INVENTORY" class="tab-icon">
+                        <span class="tab-badge-new hidden" id="badge-inventory">NEW</span>
+                    </button>
+                    <button class="tab-btn active" data-nav="home">
+                        <img src="assets/home--icon.png" alt="HOME" class="tab-icon">
+                        <span class="tab-badge-new hidden" id="badge-home">NEW</span>
+                    </button>
+                    <button class="tab-btn" data-nav="daily">
+                        <img src="assets/quest-icon.png" alt="DAILY" class="tab-icon">
+                        <span class="tab-badge-new hidden" id="badge-daily">NEW</span>
+                    </button>
+                </div>
+
+                <div class="walkman-body-frame">
+                    <img src="assets/frame-walkman.png" alt="Walkman Frame" class="frame-bg">
+
+                    <div class="walkman-display-container">
+                        <img src="assets/home/blue-cassette.png" alt="Walkman Display" class="display-screen"
+                            id="display-screen">
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <div id="app-wrapper" style="display: none;">
+        <div class="game-container">
+            <!-- Top Bar: Crown - MAX SCORE & Separate Settings Button -->
+            <div class="top-bar">
+                <div class="top-bar-score-box">
+                    <img src="assets/top_bar_bg.png" alt="bar" class="top-bar-bg">
+                    <div class="top-bar-content">
+                        <div class="top-bar-crown-group">
+                            <img src="assets/crown_icon.png" alt="crown" class="icon-crown">
+                            <div class="max-score-text">
+                                <span class="score-value" id="maxScoreDisplay">0</span>
+                            </div>
+                        </div>
+
+                        <!-- Timer Display (visible only in Time Mode) -->
+                        <div class="top-bar-timer-box hidden" id="topBarTimerBox">
+                            <span class="timer-label">TIMER:</span>
+                            <div class="timer-display-wrapper">
+                                <span class="timer-value" id="gameTimerDisplay">2:00</span>
+                                <div id="timerPlusSeconds" class="timer-plus-popup">+5</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <img src="assets/setting-button.png" alt="settings" class="btn-settings-square" id="btnSettings">
+            </div>
+
+            <!-- Lines Cleared Section -->
+            <div class="lines-section">
+                <div class="lines-blocks" id="linesBlocksContainer">
+                    <div class="lines-count-banner">
+                        <span id="linesClearedText" class="lines-count-inline">0/10</span>
+                    </div>
+
+                    <img src="assets/line_block_empty.png" alt="empty" class="block blue" id="block-1">
+                    <img src="assets/line_block_empty.png" alt="empty" class="block blue" id="block-2">
+                    <img src="assets/line_block_empty.png" alt="empty" class="block blue" id="block-3">
+                    <img src="assets/line_block_empty.png" alt="empty" class="block blue" id="block-4">
+                    <img src="assets/line_block_empty.png" alt="empty" class="block blue" id="block-5">
+                    <img src="assets/line_block_empty.png" alt="empty" class="block blue" id="block-6">
+
+                    <div class="coin-container">
+                        <img src="assets/coin_icon.png" alt="coins" class="coins-icon">
+                        <div class="coin-banner-box">
+                            <span class="coin-count-number" id="linesCoinDisplay">10</span>
+                        </div>
+                        <div id="coinPlusOne" class="coin-plus-one">+1</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bottom Section: Skills - Current Score (Centered) - Shop -->
+            <div class="bottom-section">
+                <img src="assets/btn_skills.png" alt="Skills" class="btn-skills" id="btnSkills">
+
+                <div class="current-score-area">
+                    <div class="score-display-wrapper">
+                        <div class="combo-tolerance-bg level-0" id="comboToleranceBg">
+                            <span class="tolerance-line"></span>
+                            <span class="tolerance-line"></span>
+                            <span class="tolerance-line"></span>
+                        </div>
+                        <img src="assets/score_display_bg.png" alt="Current Score" class="score-display-bg">
+                        <div class="current-score-digits" id="currentScoreDisplay">0</div>
+                    </div>
+                </div>
+
+                <img src="assets/btn_shop.png" alt="Shop" class="btn-shop" id="btnShop">
+            </div>
+        </div>
+
+        <main>
+            <div id="board"></div>
+        </main>
+
+        <div id="tray">
+            <div class="tray-slot" id="slot-0"></div>
+            <div class="tray-slot" id="slot-1"></div>
+            <div class="tray-slot" id="slot-2"></div>
+            <div id="tray-skill-hint" class="tray-skill-hint"></div>
+        </div>
+
+        <!-- Bottom spacing reserved under tray for banner -->
+        <div class="tray-bottom-banner-placeholder"></div>
+    </div>
+
+    <!-- Persistent Google AdMob / Google Test Ad Banner (Visibile SOLO nella schermata di gioco) -->
+    <div id="admob-banner-container" class="admob-banner-container" style="display: none;">
+        <div id="admob-web-slot" class="admob-web-slot">
+            <div class="google-test-ad-box" id="google-test-ad-box">
+                <span class="google-test-badge">Test Ad</span>
+                <div class="google-test-content">
+                    <div class="google-test-icon">
+                        <svg viewBox="0 0 24 24" width="22" height="22">
+                            <path fill="#4285F4"
+                                d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
+                            <path fill="#34A853"
+                                d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
+                            <path fill="#FBBC05"
+                                d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" />
+                            <path fill="#EA4335"
+                                d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" />
+                        </svg>
+                    </div>
+                    <div class="google-test-texts">
+                        <div class="google-test-title">Nice job! This is a 320x50 test ad.</div>
+                        <div class="google-test-subtitle">Google AdMob Test Mode • google.com</div>
+                    </div>
+                    <button type="button" class="google-test-btn" id="google-test-cta-btn">VISITA</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Continue / Revive Full-Screen Overlay (Before Game Over) -->
+    <div id="continue-revive-modal" class="continue-revive-modal hidden">
+        <div class="continue-screen-container">
+            <!-- Top Header -->
+            <div class="continue-header">
+                <div class="continue-title">CONTINUE?</div>
+                <div class="continue-desc">Use 4 tickets or watch an ad to continue?</div>
+            </div>
+
+            <!-- Center Content: Countdown & Balance -->
+            <div class="continue-center-content">
+                <!-- 5s Countdown Timer -->
+                <div class="continue-timer-container">
+                    <svg class="continue-timer-svg" viewBox="0 0 100 100">
+                        <circle class="timer-circle-bg" cx="50" cy="50" r="42"></circle>
+                        <circle class="timer-circle-progress" id="continue-timer-circle" cx="50" cy="50" r="42">
+                        </circle>
+                    </svg>
+                    <div class="continue-timer-count" id="continue-timer-count">5</div>
+                </div>
+
+                <!-- Ticket Balance Info (Green Pixel Badge) -->
+                <div class="continue-ticket-info" id="continue-ticket-info">
+                    <img src="assets/ticket.png" alt="Ticket" class="continue-ticket-mini-icon pixel-art">
+                    <span class="continue-ticket-info-text"><strong id="continue-ticket-balance"></strong></span>
+                </div>
+
+                <!-- Feedback / Error Alert -->
+                <div class="continue-msg-alert hidden" id="continue-msg-alert"></div>
+            </div>
+
+            <!-- Bottom Action Buttons (Shop Layout: Row 1 = Ticket & Ad, Row 2 = Game Over spanning full width) -->
+            <div class="continue-footer">
+                <div class="continue-actions-row">
+                    <button class="continue-action-btn continue-ticket-btn" id="btn-continue-ticket"
+                        aria-label="Use 4 Tickets">
+                        <img src="assets/use-ticket.png" alt="Use 4 Tickets" class="continue-btn-img">
+                    </button>
+                    <button class="continue-action-btn continue-ad-btn" id="btn-continue-ad" aria-label="Watch Ad">
+                        <img src="assets/watch-ads.png" alt="Watch Ad" class="continue-btn-img">
+                    </button>
+                </div>
+                <div class="continue-exit-row">
+                    <button class="continue-action-btn continue-gameover-btn" id="btn-continue-gameover"
+                        aria-label="Game Over">
+                        <img src="assets/game-over.png" alt="Game Over" class="continue-btn-img continue-go-img">
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Victory Level Reward Notification Toast (Universal Overlay) -->
+    <div id="victory-reward-toast" class="victory-reward-toast hidden">
+        <div class="victory-reward-level" id="victory-reward-level-text">LVL 3K REACHED!</div>
+        <div class="victory-reward-tickets">
+            <span class="victory-reward-label-prefix">MATCH REWARD:</span>
+            <img src="assets/ticket.png" alt="Ticket" class="victory-reward-ticket-icon">
+            <span class="victory-reward-tickets-text">5</span>
+        </div>
+    </div>
+
+    <div id="game-over">
+        <div id="go-balatro-bg-container"
+            style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; overflow: hidden;">
+        </div>
+        <canvas id="confetti-canvas"></canvas>
+        <div id="bouncer"></div>
+
+        <div class="go-container">
+            <!-- 1. Top Title -->
+            <div class="go-title-wrapper">
+                <img src="assets/game-over-title.png" alt="Game Over" class="go-title-img">
+            </div>
+
+            <!-- 2. Single Row: SCORE + star-icon + match score number -->
+            <div class="go-score-row">
+                <span class="go-score-title">SCORE</span>
+                <img src="assets/star-icon.png" alt="Star" class="go-star-icon score-icon-wiggle">
+                <span id="go-score-text" class="go-score-number">0</span>
+            </div>
+
+            <!-- 3. Active Skills Section (Below Score) -->
+            <div id="go-skills-section" class="go-skills-section">
+                <span class="go-skills-title">SKILLS ACTIVATED:</span>
+                <div id="go-skills-list" class="go-skills-list"></div>
+            </div>
+
+            <!-- 4. Keep Playing Row (Removed from Victory Screen) -->
+            <div id="go-keep-playing-row" class="go-keep-playing-row hidden" style="display: none !important;">
+                <button id="go-keep-playing-btn" class="go-btn-action go-btn-keep-playing" aria-label="Keep Playing"
+                    style="display: none !important;">
+                    <img src="assets/keep-playing-btn.png" alt="Keep Playing" class="go-keep-playing-img">
+                </button>
+            </div>
+
+            <!-- 5. Single Row: Home button (left) & Replay button (right) -->
+            <div class="go-buttons-row">
+                <button id="go-home-btn" class="go-btn-action" aria-label="Home">
+                    <img src="assets/home-button.png" alt="Home" class="go-btn-img">
+                </button>
+                <button id="play-btn" class="go-btn-action" aria-label="Replay">
+                    <img src="assets/replay-button.png" alt="Replay" class="go-btn-img">
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Swift Pizza Trash Zone Overlay -->
+    <div id="swift-pumpkin-trash-zone">
+        <div class="trash-zone-frame">
+            <img class="trash-zone-icon" src="assets/pixel_trash_can.png" alt="Trash Can" />
+            <div class="trash-zone-text">DISCARD PIECE</div>
+        </div>
+    </div>
+
+    <!-- Modal In-Game Custom (Settings / Skills / Shop) -->
+    <div id="gameModal" class="custom-modal-overlay hidden">
+        <div class="custom-modal-box">
+            <h2 id="modalTitle" class="custom-modal-title">SETTINGS</h2>
+            <div id="modalBody" class="custom-modal-body"></div>
+            <button id="modalCloseBtn" class="custom-modal-btn btn-close">CLOSE</button>
+        </div>
+    </div>
+
+    <!-- Pixel-Art Shop Overlay (shopRender) -->
+    <div id="shop-render-overlay" class="shop-render-overlay hidden">
+        <!-- Pink Animated WebGL Balatro Background Shader for Shop -->
+        <div id="shop-balatro-bg-container"
+            style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; overflow: hidden;">
+        </div>
+        <!-- Floating Test Skills Button (In the Corner) -->
+        <button class="shop-test-skills-btn" id="shop-test-skills-btn" title="Test / Toggle All Skills"
+            style="display: none;">
+            <span class="test-icon">🧪</span>
+            <span class="test-text">TEST SKILLS</span>
+        </button>
+
+        <div class="shop-game-container" id="shop-game-container">
+            <!-- Top Header Bar -->
+            <header class="shop-header">
+                <div class="coins-display" id="shop-coins-display" title="Click to add coins!">
+                    <img src="assets/shop/coin.png" alt="Coin" class="header-icon coin-icon pixel-art">
+                    <span class="value" id="shop-coins-value">0</span>
+                </div>
+
+                <div class="title-container">
+                    <img src="assets/shop/title_shop.png" alt="SHOP" class="shop-title-img pixel-art">
+                </div>
+            </header>
+
+            <!-- Main Item Cards Container -->
+            <main class="shop-cards" id="shop-cards">
+            </main>
+
+            <!-- Bottom Action Controls -->
+            <footer class="shop-footer">
+                <div class="actions-row" id="shop-normal-actions">
+                    <button class="action-btn lock-btn" id="shop-btn-lock-roll" aria-label="Lock Roll">
+                        <img src="assets/shop/btn_lock_roll.png" alt="Lock Roll" class="btn-img pixel-art"
+                            id="shop-img-lock-roll">
+                    </button>
+
+                    <button class="action-btn roll-btn" id="shop-btn-roll-items" aria-label="Roll Items">
+                        <img src="assets/shop/btn_roll_items.png" alt="Roll Items" class="btn-img pixel-art"
+                            id="shop-img-roll-items">
+                    </button>
+                </div>
+
+                <div class="done-row hidden" id="shop-done-action-row">
+                    <button class="action-btn done-btn" id="shop-btn-done-lock" aria-label="Done Locking">
+                        <img src="assets/shop/btn_done.png" alt="Done" class="btn-img pixel-art">
+                    </button>
+
+                    <button class="action-btn clear-lock-btn" id="shop-btn-clear-lock" aria-label="Clear Lock">
+                        <img src="assets/shop/btn_clear_lock.png" alt="Clear Lock" class="btn-img pixel-art">
+                    </button>
+                </div>
+
+                <div class="exit-row" id="shop-exit-action-row">
+                    <button class="action-btn exit-btn" id="shop-btn-exit-shop" aria-label="Exit Shop">
+                        <img src="assets/shop/btn_exit_shop.png" alt="Exit Shop" class="btn-img pixel-art">
+                    </button>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+    <!-- Modal for Test Skills / Skills Overview -->
+    <div id="shop-test-modal" class="shop-modal-backdrop hidden">
+        <div class="skills-modal-wrapper">
+            <div class="skills-outside-title" id="skills-outside-title">SKILL CODEX</div>
+            <div class="shop-pixel-card skills-frame-card">
+                <div id="shop-test-skills-list" class="test-skills-list">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Skill Purchase Showcase Overlay (Darkening Mask & Pixel Art Presentation) -->
+    <div id="skill-purchase-showcase-overlay" class="skill-showcase-backdrop hidden">
+        <div class="skill-showcase-content">
+            <div class="skill-showcase-title" id="skill-showcase-title">TITLE</div>
+            <div class="skill-showcase-icon-stage">
+                <div class="skill-showcase-rays-spinner">
+                    <div class="skill-showcase-rays" id="skill-showcase-rays"></div>
+                </div>
+                <img src="" alt="Skill Icon" class="skill-showcase-icon pixel-art" id="skill-showcase-icon">
+            </div>
+            <div class="skill-showcase-desc-wrapper">
+                <div class="skill-showcase-desc" id="skill-showcase-desc">Description text</div>
+            </div>
+            <div class="skill-showcase-tap-hint">TAP TO CLOSE</div>
+        </div>
+    </div>
+
+    <!-- Retro Work In Progress Popup Modal -->
+    <div class="wip-modal-overlay" id="wip-modal">
+        <div class="wip-modal-box">
+            <div class="wip-modal-header">NOTICE</div>
+            <div class="wip-modal-body">COMING SOON</div>
+            <button class="wip-modal-btn" id="wip-modal-close">OK</button>
+        </div>
+    </div>
+
+    <!-- Retro Game Modes Popup Overlay -->
+    <div class="modes-modal-overlay" id="modes-modal">
+        <div class="modes-cards-container">
+            <div class="mode-card" data-mode-index="0">
+                <div class="mode-card-title">CLASSIC TAPE</div>
+                <div class="mode-card-desc">Standard mode with the active Shop. Reach target points to win and earn
+                    Tickets (scaling with target score, min 5). The target increases by 1.5k. <span
+                        class="mode-reset-time" id="classic-reset-countdown">(Resets in: --h --m)</span></div>
+            </div>
+            <div class="mode-card" data-mode-index="1">
+                <div class="mode-card-title">TEMPO TAPE</div>
+                <div class="mode-card-desc">Start with 2 minutes on the clock. Clear lines to gain +5 seconds of extra
+                    time. Earn 1 Ticket for every 1k points scored, up to a maximum of 15 Tickets at 10k points.
+                </div>
+            </div>
+            <div class="mode-card" data-mode-index="2">
+                <div class="mode-card-title">VINTAGE TAPE</div>
+                <div class="mode-card-desc">Pure endless mode with no Shop or skills. Rely purely on your strategy and
+                    earn 1 Ticket every 500 points.</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script organizzati a moduli logici -->
+    <script src="js/balatroShader.js"></script>
+    <script>
+        if (typeof BalatroShader !== 'undefined') {
+            try {
+                window.balatroShaderInstance = new BalatroShader({
+                    container: "#balatro-bg-container",
+                    colours: { c1: "#ADD8E6", c2: "#00BFFF", c3: "#0066CC" },
+                    speed: 0.20,
+                    contrast: 1.2,
+                    spinAmount: 0.4,
+                    pixelSizeFac: 1000,
+                    spinEase: 0.5,
+                    offsetX: 0.0,
+                    offsetY: -0.12
+                });
+            } catch (e) {
+                console.warn("BalatroShader initialization fallback:", e);
+            }
+        }
+    </script>
+    <script src="js/retro-audio.js"></script>
+    <script src="js/grid.js"></script>
+    <script src="js/pieces.js"></script>
+    <script src="js/drag-drop.js"></script>
+    <script src="js/shop-render.js"></script>
+    <script src="js/game-snapshot.js"></script>
+    <script src="js/crt-effect.js"></script>
+    <script src="js/home-render.js"></script>
+    <script src="js/capacitor.js"></script>
+    <script src="js/admob-manager.js"></script>
+    <script src="js/tutorial-manager.js"></script>
+    <script>
+        if (typeof initBoard === 'function') {
+            initBoard();
+        }
+        (function initFpsCounter() {
+            let lastTime = performance.now();
+            let frameCount = 0;
+            function updateFps(now) {
+                frameCount++;
+                const delta = now - lastTime;
+                if (delta >= 400) {
+                    const fps = Math.round((frameCount * 1000) / delta);
+                    const el = document.getElementById('gameFpsCounter');
+                    if (el) {
+                        el.textContent = fps + ' FPS';
+                    }
+                    frameCount = 0;
+                    lastTime = now;
+                }
+                requestAnimationFrame(updateFps);
+            }
+            requestAnimationFrame(updateFps);
+        })();
+    </script>
+
+    <!-- Overlay di blocco in caso di rotazione orizzontale del dispositivo -->
+    <div id="rotate-portrait-prompt">
+        <div class="rotate-prompt-box">
+            <div class="rotate-icon">📱</div>
+            <div class="rotate-title">PORTRAIT ONLY</div>
+            <div class="rotate-desc">Ruota il dispositivo in verticale per continuare a giocare.</div>
+        </div>
+    </div>
+</body>
+
+</html>

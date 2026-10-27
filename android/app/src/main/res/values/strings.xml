@@ -1,0 +1,11 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Revolve Blocks</string>
+    <string name="title_activity_main">Revolve Blocks</string>
+    <string name="package_name">com.revolve.blocks</string>
+    <string name="custom_url_scheme">com.revolve.blocks</string>
+    <!-- Google Official Sample Test App ID (Garantisce banner "Test Ad" senza blocchi account) -->
+    <string name="admob_app_id">ca-app-pub-3940256099942544~3347511713</string>
+    <!-- Production App ID utente: ca-app-pub-7566982605361565~9819370952 -->
+    <string name="admob_app_id_production">ca-app-pub-7566982605361565~9819370952</string>
+</resources>

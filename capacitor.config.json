@@ -1,0 +1,22 @@
+{
+  "appId": "com.revolve.blocks",
+  "appName": "Revolve Blocks",
+  "webDir": "www",
+  "plugins": {
+    "StatusBar": {
+      "visible": false,
+      "overlaysWebView": true
+    },
+    "SplashScreen": {
+      "launchShowDuration": 1500,
+      "launchAutoHide": true,
+      "backgroundColor": "#080706",
+      "androidSplashResourceName": "splash",
+      "androidScaleType": "CENTER_CROP",
+      "showSpinner": false
+    },
+    "AdMob": {
+      "appId": "ca-app-pub-7566982605361565~9819370952"
+    }
+  }
+}

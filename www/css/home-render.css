@@ -1,0 +1,2884 @@
+:root {
+    --blu-chiaro: #86c5da;
+    /* Colore Blu chiaro leggermente più scuro */
+    --azzurro: #0099e6;
+    /* Colore Azzurro leggermente più scuro */
+    --ombra-laterale: rgba(0, 10, 30, 0.85);
+    /* Colore per l'ombra uniforme */
+}
+
+/* Home Screen Container & Background */
+#home-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+    background-color: var(--azzurro);
+    z-index: 1500;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    overflow: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    user-select: none;
+    -webkit-user-select: none;
+    font-family: 'Press Start 2P', monospace, sans-serif;
+}
+
+/* Dynamic Checkerboard Background */
+.sfondo-dinamico {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+    /* Scacchiera creata con i due colori (Blu chiaro e Azzurro) */
+    background-color: var(--azzurro);
+    background-image:
+        linear-gradient(45deg, var(--blu-chiaro) 25%, transparent 25%, transparent 75%, var(--blu-chiaro) 75%, var(--blu-chiaro)),
+        linear-gradient(45deg, var(--blu-chiaro) 25%, transparent 25%, transparent 75%, var(--blu-chiaro) 75%, var(--blu-chiaro));
+    background-size: 80px 80px;
+    background-position: 0 0, 40px 40px;
+
+    /* Animazione rallentata (15 secondi per il movimento continuo) */
+    animation: muoviScacchiera 15s linear infinite;
+}
+
+/* Strato sovrapposto con ombra sfocata blu al centro e blu intenso ai bordi */
+.sfondo-dinamico::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(ellipse at center,
+            rgba(134, 197, 218, 0.15) 0%,
+            rgba(0, 100, 210, 0.55) 50%,
+            rgba(0, 25, 90, 0.92) 100%);
+    pointer-events: none;
+}
+
+/* Dynamic Balanced Blue Checkerboard Background for Gameplay Screen */
+.sfondo-dinamico-game {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+    z-index: 1;
+    pointer-events: none;
+    background-color: #2163aa;
+    background-image:
+        linear-gradient(45deg, #337ecb 25%, transparent 25%, transparent 75%, #337ecb 75%, #337ecb),
+        linear-gradient(45deg, #337ecb 25%, transparent 25%, transparent 75%, #337ecb 75%, #337ecb);
+    background-size: 80px 80px;
+    background-position: 0 0, 40px 40px;
+    animation: muoviScacchiera 15s linear infinite;
+}
+
+.sfondo-dinamico-game::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(ellipse at center,
+            rgba(51, 126, 203, 0.2) 0%,
+            rgba(33, 99, 170, 0.45) 50%,
+            rgba(15, 52, 95, 0.68) 100%);
+    pointer-events: none;
+}
+
+/* Movimento lento e continuo della scacchiera in diagonale */
+@keyframes muoviScacchiera {
+    0% {
+        background-position: 0 0, 40px 40px;
+    }
+
+    100% {
+        background-position: 80px 80px, 120px 120px;
+    }
+}
+
+/* Movimento perfettamente sincronizzato a scacchiera per le anteprime (20px tile, 10px offset) */
+@keyframes muoviScacchieraPreview {
+    0% {
+        background-position: 0 0, 10px 10px;
+    }
+
+    100% {
+        background-position: 20px 20px, 30px 30px;
+    }
+}
+
+/* Effetto vivace: pulsazione di luminosità */
+@keyframes effettoVivace {
+    0% {
+        filter: brightness(1) saturate(1);
+    }
+
+    100% {
+        filter: brightness(1.15) saturate(1.3);
+    }
+}
+
+#home-screen.hidden {
+    display: none !important;
+    opacity: 0;
+    pointer-events: none;
+    visibility: hidden;
+}
+
+/* --- OTTIMIZZAZIONE PRESTAZIONI: IBERNAZIONE SFONDI E VISTE NON VISIBILI --- */
+body.in-home #game-dynamic-bg,
+body:not(.in-game) #game-dynamic-bg {
+    display: none !important;
+    animation-play-state: paused !important;
+}
+
+body.in-game #home-screen .sfondo-dinamico,
+#home-screen.hidden .sfondo-dinamico {
+    display: none !important;
+    animation-play-state: paused !important;
+}
+
+/* Pausa immediata delle animazioni CSS per le tab e schermate nascoste */
+#home-screen .main-view-section.hidden * {
+    animation-play-state: paused !important;
+}
+
+#home-screen.hidden * {
+    animation-play-state: paused !important;
+}
+
+/* Background Grid Pattern inside #home-screen (Removed per user request) */
+#home-screen .background-grid {
+    display: none !important;
+}
+
+#home-screen .mobile-container {
+    width: 100%;
+    max-width: 480px;
+    height: 100vh;
+    height: 100dvh;
+    max-height: 100vh;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    z-index: 2;
+    overflow: hidden;
+    padding: 12px 16px;
+    box-sizing: border-box;
+}
+
+/* Top HUD Bar Header */
+#home-screen .hud-bar {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 4px;
+    margin-top: 7vh;
+    margin-bottom: 8px;
+    flex-shrink: 0;
+}
+
+#home-screen .hud-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+#home-screen .hud-icon {
+    height: 42px;
+    width: auto;
+    image-rendering: pixelated;
+    object-fit: contain;
+}
+
+#home-screen .crown-icon {
+    height: 35.1px;
+    transform: translateY(-0.5vh);
+}
+
+#home-screen .ticket-icon {
+    height: 34px;
+}
+
+#home-screen .hud-text-single {
+    display: flex;
+    align-items: center;
+}
+
+#home-screen .hud-val {
+    font-size: 22.5px;
+    color: #ffffff;
+    text-shadow: 1.5px 1.5px 0 #000, -1.5px -1.5px 0 #000, 1.5px -1.5px 0 #000, -1.5px 1.5px 0 #000;
+    animation: recordBlink 3.5s ease-in-out infinite;
+}
+
+@keyframes recordBlink {
+
+    0%,
+    70% {
+        opacity: 1;
+    }
+
+    85% {
+        opacity: 0.18;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+#home-screen .hud-ticket-val {
+    font-size: 22.5px;
+    color: #ffffff;
+    text-shadow: 1.5px 1.5px 0 #000, -1.5px -1.5px 0 #000, 1.5px -1.5px 0 #000, -1.5px 1.5px 0 #000;
+}
+
+/* Settings button */
+#home-screen .setting-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    outline: none;
+    margin-top: -1vh;
+    transition: transform 0.15s ease, filter 0.15s ease;
+}
+
+#home-screen .setting-btn img {
+    width: 49px;
+    height: 49px;
+    image-rendering: pixelated;
+    display: block;
+    filter: drop-shadow(0 0.5vh 0px rgba(0, 0, 0, 0.75));
+}
+
+#home-screen .setting-btn:hover {
+    transform: scale(1.08);
+}
+
+#home-screen .setting-btn:active {
+    transform: scale(0.95);
+}
+
+/* Cassette Level Header */
+#home-screen .cassette-info-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    font-size: 40.86px;
+    color: #ffffff;
+    text-shadow: 1.5px 1.5px 0 #000, -1.5px -1.5px 0 #000, 1.5px -1.5px 0 #000, -1.5px 1.5px 0 #000;
+    margin-top: calc(6px + 5vh);
+    margin-bottom: 6px;
+}
+
+/* Icona Header Punteggio Cassette (Classic, Wild, Vintage) & Effetto Wiggle a intervalli distanziati */
+#home-screen .star-icon,
+#home-screen #header-icon,
+.score-icon-wiggle {
+    display: inline-block;
+    transform-origin: center center;
+    animation: iconScoreWiggle 6.5s ease-in-out infinite;
+}
+
+
+#home-screen .star-icon,
+#home-screen #header-icon {
+    width: 56.7px;
+    height: 56.7px;
+    object-fit: contain;
+    image-rendering: pixelated;
+    position: relative;
+    top: -0.5vh;
+}
+
+@keyframes iconScoreWiggle {
+
+    0%,
+    100% {
+        transform: rotate(0deg) scale(1);
+    }
+
+    2% {
+        transform: rotate(-6deg) scale(1.05);
+    }
+
+    4% {
+        transform: rotate(5deg) scale(1.05);
+    }
+
+    6% {
+        transform: rotate(-4deg) scale(1.03);
+    }
+
+    8% {
+        transform: rotate(3deg) scale(1.02);
+    }
+
+    10% {
+        transform: rotate(-1.5deg) scale(1.01);
+    }
+
+    12%,
+    98% {
+        transform: rotate(0deg) scale(1);
+    }
+}
+
+/* Cassette Selector Row */
+#home-screen .cassette-selector {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    margin-top: 0vh;
+    margin-bottom: 6px;
+}
+
+#home-screen .arrow-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    outline: none;
+    padding: 2px;
+    z-index: 10;
+}
+
+
+#home-screen .arrow-btn.left-arrow {
+    left: -8px;
+}
+
+#home-screen .arrow-btn.right-arrow {
+    right: -8px;
+}
+
+#home-screen .arrow-btn img {
+    width: 46px;
+    height: auto;
+    image-rendering: pixelated;
+    display: block;
+    filter: drop-shadow(0 0.5vh 0px rgba(0, 0, 0, 0.75));
+}
+
+
+
+
+#home-screen .cassette-display {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    overflow: visible;
+    touch-action: pan-y;
+    user-select: none;
+    -webkit-user-select: none;
+    cursor: grab;
+}
+
+#home-screen .cassette-display:active {
+    cursor: grabbing;
+}
+
+#home-screen .cassette-stack-wrapper {
+    position: relative;
+    width: 100%;
+    max-width: 440px;
+    height: 220px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    touch-action: pan-y;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+/* Main center cassette wave container */
+#home-screen .cassette-wave-container {
+    position: relative;
+    width: 100%;
+    max-width: 300px;
+    height: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 3;
+    margin-bottom: 4px;
+    animation: gentleWave 3.2s ease-in-out infinite;
+    touch-action: pan-y;
+}
+
+/* Main center cassette tape image */
+#home-screen .cassette-img {
+    position: relative;
+    width: 100%;
+    height: auto;
+    image-rendering: pixelated;
+    filter: drop-shadow(0 0.5vh 0px rgba(0, 0, 0, 0.75));
+    transition: transform 0.28s cubic-bezier(0.2, 0.9, 0.3, 1), opacity 0.28s ease;
+    transform: translateX(0) scale(1);
+    opacity: 1;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-user-drag: none;
+}
+
+#home-screen .cassette-img.slide-out-left {
+    transform: translateX(-240px) scale(0.85);
+    opacity: 0;
+}
+
+#home-screen .cassette-img.slide-out-right {
+    transform: translateX(240px) scale(0.85);
+    opacity: 0;
+}
+
+#home-screen .cassette-img.slide-in-from-right {
+    transform: translateX(240px) scale(0.85);
+    opacity: 0;
+    transition: none !important;
+}
+
+#home-screen .cassette-img.slide-in-from-left {
+    transform: translateX(-240px) scale(0.85);
+    opacity: 0;
+    transition: none !important;
+}
+
+/* Left and Right Background Cassettes */
+#home-screen .cassette-peek {
+    position: absolute;
+    top: 0px;
+    width: 235px;
+    height: auto;
+    image-rendering: pixelated;
+    z-index: 1;
+    transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.3s ease;
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-user-drag: none;
+}
+
+#home-screen .peek-left {
+    left: -180px;
+    opacity: 0.7;
+    filter: brightness(0.75) contrast(0.95) drop-shadow(0 0.5vh 0px rgba(0, 0, 0, 0.75));
+}
+
+#home-screen .peek-right {
+    right: -180px;
+    opacity: 0.75;
+    filter: brightness(0.82) contrast(0.95) drop-shadow(0 0.5vh 0px rgba(0, 0, 0, 0.75));
+}
+
+/* Tape Type Title Label */
+#home-screen .cassette-title-label {
+    font-family: 'Press Start 2P', monospace, sans-serif;
+    font-size: 1.1em;
+    color: #ffffff;
+
+    /* Aggiunta di Bold e Italic */
+    font-weight: bold;
+    font-style: italic;
+
+    text-align: center;
+    margin-top: calc(4px + 0.5vh);
+    margin-bottom: 4px;
+    letter-spacing: 1px;
+
+    -webkit-font-smoothing: none;
+    font-smooth: never;
+
+    -webkit-text-stroke: 4px #000000;
+    paint-order: stroke fill;
+
+    min-height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    white-space: nowrap;
+}
+
+#home-screen #tape-title {
+    font-size: 1.6em;
+}
+
+#home-screen .cassette-title-label .typewriter-char {
+    display: inline-block;
+    animation: typewriterCharPop 0.14s cubic-bezier(0.18, 0.89, 0.32, 1.25) forwards;
+    transform-origin: center bottom;
+}
+
+#home-screen .cassette-title-label .typewriter-char.typewriter-space {
+    width: 0.55em;
+    min-width: 0.55em;
+}
+
+@keyframes typewriterCharPop {
+    0% {
+        opacity: 0;
+        transform: translateY(-8px) scale(1.4);
+        filter: brightness(2.2);
+    }
+
+    55% {
+        opacity: 1;
+        transform: translateY(2px) scale(0.93);
+        filter: brightness(1.25);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+        filter: brightness(1);
+    }
+}
+
+/* Decorative Banner Title for Vault & Shop Sections */
+#home-screen #vault-view .cassette-title-label,
+#home-screen #shop-view .cassette-title-label,
+#home-screen .section-banner-title {
+    background: url('../assets/title_banner.png') no-repeat center center / 100% 100%;
+    image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
+    width: clamp(360px, 75.6vw, 400px);
+    aspect-ratio: 746.55 / 140;
+    min-height: 0;
+    height: auto;
+    font-size: clamp(1rem, 2.86vw, 1.1rem);
+    color: #ffffff;
+    font-weight: bold;
+    font-style: italic;
+    text-align: center;
+    letter-spacing: 1.2px;
+    -webkit-text-stroke: 3px #000000;
+    paint-order: stroke fill;
+    text-shadow: 0 2px 0 rgba(0, 0, 0, 0.85);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    padding: 0 16% clamp(8px, 2.2vw, 12px) 16%;
+    margin-top: 8px;
+    margin-bottom: 2px;
+    flex-shrink: 0;
+    filter: drop-shadow(0 4px 0 rgba(0, 0, 0, 0.6));
+    white-space: nowrap;
+}
+
+/* Action Row Buttons */
+#home-screen .action-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    width: auto;
+    margin-top: 1.5vh;
+    margin-bottom: 4vh;
+}
+
+#home-screen .play-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    outline: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: transform 0.1s ease, filter 0.15s ease;
+}
+
+#home-screen .play-btn img {
+    width: 234px;
+    height: auto;
+    image-rendering: pixelated;
+    display: block;
+    filter: brightness(1.1) drop-shadow(0 0.5vh 0px rgba(0, 0, 0, 0.75));
+}
+
+#home-screen .play-btn:hover {
+    transform: translateY(-2px);
+}
+
+#home-screen .play-btn:active {
+    transform: translateY(2px) scale(0.98);
+}
+
+#home-screen .gamemode-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    outline: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: transform 0.1s ease, filter 0.15s ease;
+}
+
+#home-screen .gamemode-btn img {
+    width: 62px;
+    height: 62px;
+    image-rendering: pixelated;
+    display: block;
+    filter: brightness(1.1) drop-shadow(0 0.5vh 0px rgba(0, 0, 0, 0.75));
+}
+
+#home-screen .gamemode-btn:hover {
+    transform: translateY(-2px);
+}
+
+#home-screen .gamemode-btn:active {
+    transform: translateY(2px) scale(0.95);
+}
+
+#home-screen .walkman-section {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    z-index: 50;
+    margin-top: auto;
+    margin-bottom: -105px;
+    transform: scale(1.21) translateY(5vh);
+    transform-origin: bottom center;
+    flex-shrink: 0;
+}
+
+/* 4 Top Navigation Tabs */
+#home-screen .walkman-tabs-row {
+    width: 89%;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    gap: 0;
+    margin-bottom: -40px;
+    transform: translateY(1vh);
+    z-index: 3;
+}
+
+#home-screen .tab-btn {
+    position: relative;
+    background: none;
+    border: none;
+    cursor: pointer;
+    outline: none;
+    flex: 1;
+    aspect-ratio: 0.73 / 1;
+    background-image: url('../assets/home/blue-btn.png');
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    padding: 6px;
+    padding-bottom: 9px;
+    transition: transform 0.15s ease, background-image 0.15s ease, filter 0.15s ease;
+    image-rendering: pixelated;
+    filter: brightness(1.12) drop-shadow(0 0.5vh 0px rgba(0, 0, 0, 0.75));
+    transform: translateY(0);
+}
+
+/* Theme-specific Tab Button Colors */
+body.theme-default #home-screen .tab-btn,
+body:not([class*="theme-"]) #home-screen .tab-btn {
+    background-image: url('../assets/home/blue-btn.png');
+}
+
+body.theme-pink-white #home-screen .tab-btn {
+    background-image: url('../assets/home/pink-btn.png');
+}
+
+body.theme-purple-white #home-screen .tab-btn {
+    background-image: url('../assets/home/purple-btn.png');
+}
+
+body.theme-green-white #home-screen .tab-btn {
+    background-image: url('../assets/home/green-btn.png');
+}
+
+body.theme-orange-white #home-screen .tab-btn {
+    background-image: url('../assets/home/orange-btn.png');
+}
+
+body.theme-gold-white #home-screen .tab-btn {
+    background-image: url('../assets/home/yellow-btn.png');
+}
+
+#home-screen .tab-badge-new {
+    position: absolute;
+    top: -6px;
+    right: -4px;
+    z-index: 10;
+    font-family: 'Press Start 2P', monospace, sans-serif;
+    font-size: 7.5px;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+    padding: 2.5px 4.5px;
+    background: #000000;
+    border: 1.5px solid #ff2a4b;
+    border-radius: 4px;
+    line-height: 1;
+    display: inline-block;
+    pointer-events: none;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.85);
+    animation: tabBadgeRgbCycle 3s infinite;
+}
+
+#home-screen .tab-badge-new.hidden {
+    display: none !important;
+}
+
+@keyframes tabBadgeRgbCycle {
+
+    0%,
+    100% {
+        background: #000000;
+        color: #ff2a4b;
+        border-color: #ff2a4b;
+        transform: scale(1);
+    }
+
+    33% {
+        background: #000000;
+        color: #00f562;
+        border-color: #00f562;
+        transform: scale(1.1);
+    }
+
+    66% {
+        background: #000000;
+        color: #00a6ff;
+        border-color: #00a6ff;
+        transform: scale(1.1);
+    }
+}
+
+#home-screen .tab-btn:not(:first-child) {
+    margin-left: -0.3vw;
+}
+
+#home-screen .tab-btn.active {
+    transform: translateY(-1.1vh);
+    z-index: 4;
+    filter: brightness(1.3) drop-shadow(0 0.8vh 0px rgba(0, 0, 0, 0.85));
+}
+
+#home-screen .tab-btn:hover {
+    filter: brightness(1.28) drop-shadow(0 0.7vh 0px rgba(0, 0, 0, 0.85));
+    transform: translateY(-3px);
+}
+
+#home-screen .tab-btn:active {
+    transform: translateY(2px) scale(0.95);
+    filter: brightness(0.95) drop-shadow(0 0.2vh 0px rgba(0, 0, 0, 0.6));
+}
+
+#home-screen .tab-btn.active:hover {
+    filter: brightness(1.38) drop-shadow(0 0.8vh 0px rgba(0, 0, 0, 0.85));
+    transform: translateY(calc(-1.1vh - 3px));
+}
+
+#home-screen .tab-btn.active:active {
+    transform: translateY(calc(-1.1vh + 2px)) scale(0.95);
+    filter: brightness(1.05) drop-shadow(0 0.3vh 0px rgba(0, 0, 0, 0.6));
+}
+
+#home-screen .tab-icon {
+    width: 73%;
+    height: auto;
+    max-height: 72%;
+    object-fit: contain;
+    image-rendering: pixelated;
+    pointer-events: none;
+    transform: translateY(-2vh);
+}
+
+/* Walkman Main Body Frame */
+#home-screen .walkman-body-frame {
+    position: relative;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1;
+    filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.3));
+}
+
+#home-screen .frame-bg {
+    width: 100%;
+    height: auto;
+    display: block;
+    image-rendering: pixelated;
+}
+
+/* Walkman Display Screen */
+#home-screen .walkman-display-container {
+    position: absolute;
+    top: calc(38px + 3vh);
+    left: 50%;
+    transform: translateX(-50%);
+    width: 86%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#home-screen .display-screen {
+    width: 100%;
+    height: auto;
+    display: block;
+    image-rendering: pixelated;
+}
+
+/* Gentle Waving Animation Keyframes */
+@keyframes gentleWave {
+    0% {
+        transform: translateY(0px);
+    }
+
+    50% {
+        transform: translateY(-6px);
+    }
+
+    100% {
+        transform: translateY(0px);
+    }
+}
+
+/* Retro Pixel Work In Progress Modal Popup */
+.wip-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.65);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+}
+
+.wip-modal-overlay.show {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.wip-modal-box {
+    background-color: #24242e;
+    border: 4px solid #000000;
+    box-shadow: 0 0.8vh 0px rgba(0, 0, 0, 0.85);
+    padding: 24px 20px;
+    border-radius: 6px;
+    width: 85%;
+    max-width: 330px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    text-align: center;
+    transform: scale(0.85);
+    transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.wip-modal-overlay.show .wip-modal-box {
+    transform: scale(1);
+}
+
+.wip-modal-header {
+    font-size: 17.3px;
+    color: #ffb700;
+    letter-spacing: 1px;
+}
+
+.wip-modal-body {
+    font-size: 14.6px;
+    color: #ffffff;
+    line-height: 1.6;
+}
+
+.wip-modal-btn {
+    background-color: #ff7700;
+    border: 2.5px solid #000000;
+    color: #ffffff;
+    font-size: 15.9px;
+    padding: 10px 28px;
+    cursor: pointer;
+    outline: none;
+    box-shadow: 0 0.4vh 0px #000000;
+    transition: transform 0.1s ease, filter 0.1s ease;
+}
+
+.wip-modal-btn:hover {
+    filter: brightness(1.15);
+}
+
+.wip-modal-btn:active {
+    transform: translateY(2px);
+    box-shadow: 0 0.1vh 0px #000000;
+}
+
+/* Retro Game Modes Popup Overlay */
+.modes-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.72);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+}
+
+.modes-modal-overlay.show {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.modes-cards-container {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 90%;
+    max-width: 380px;
+    transform: scale(0.85);
+    transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.modes-modal-overlay.show .modes-cards-container {
+    transform: scale(1);
+}
+
+.mode-card {
+    position: relative;
+    width: 100%;
+    min-height: calc(15vh);
+    background: url('../assets/tutorial_frame.png') no-repeat center center / 100% 100%;
+    image-rendering: pixelated;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    padding: calc(14px + 1vh) 22px;
+    padding-left: calc(22px + 1vh);
+    box-sizing: border-box;
+    filter: drop-shadow(0 0.4vh 0px rgba(0, 0, 0, 0.6));
+    transition: transform 0.15s ease, filter 0.15s ease;
+    cursor: pointer;
+}
+
+.mode-card:hover {
+    transform: scale(1.02);
+    filter: brightness(1.1) drop-shadow(0 0.6vh 0px rgba(0, 0, 0, 0.7));
+}
+
+.mode-card-title {
+    font-size: 15.9px;
+    color: #ffcc00;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+    text-shadow: 1.5px 1.5px 0 #000;
+}
+
+.mode-card-desc {
+    font-size: 11.9px;
+    color: #ffffff;
+    line-height: 1.5;
+    text-shadow: 1px 1px 0 #000;
+}
+
+.mode-reset-time {
+    color: #4ade80;
+    font-weight: bold;
+    display: inline;
+    text-shadow: 1px 1px 0 #000;
+}
+
+/* Central Main View Sections con Accelerazione GPU Anti Frame-Drop */
+#home-screen .main-view-section {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+    min-height: 0;
+    overflow: visible;
+    margin-top: -3vh;
+    will-change: opacity, transform;
+    transform: translateZ(0);
+}
+
+#home-screen .main-view-section.hidden {
+    display: none !important;
+}
+
+/* Transizione Fluida per Cambio Schermata Home */
+#home-screen .main-view-section.view-entering {
+    opacity: 0;
+    transform: translateY(14px) scale(0.985);
+    pointer-events: none;
+}
+
+#home-screen .main-view-section.view-active {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    transition: opacity 0.22s cubic-bezier(0.16, 1, 0.3, 1), transform 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+#home-screen .main-view-section.view-exiting {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.985);
+    transition: opacity 0.14s ease-out, transform 0.14s ease-out;
+    pointer-events: none;
+}
+
+/* Retro Pixel Shimmer Transition Beam tra schermate */
+#home-screen .view-transition-bar {
+    position: absolute;
+    top: calc(9vh + 42px);
+    left: 20px;
+    right: 20px;
+    height: 3px;
+    background: linear-gradient(90deg, transparent 0%, #00ffcc 30%, #ffdd00 50%, #00ffcc 70%, transparent 100%);
+    background-size: 200% 100%;
+    border-radius: 2px;
+    box-shadow: 0 0 12px rgba(0, 255, 204, 0.9), 0 0 4px rgba(255, 221, 0, 0.7);
+    opacity: 0;
+    transform: scaleX(0);
+    transform-origin: center center;
+    pointer-events: none;
+    z-index: 999;
+}
+
+#home-screen .view-transition-bar.animating {
+    animation: transitionBeamSweep 0.32s cubic-bezier(0.2, 0.85, 0.25, 1) forwards;
+}
+
+@keyframes transitionBeamSweep {
+    0% {
+        opacity: 0;
+        transform: scaleX(0.05);
+        background-position: 0% 0%;
+    }
+
+    30% {
+        opacity: 1;
+        transform: scaleX(0.75);
+    }
+
+    70% {
+        opacity: 0.9;
+        transform: scaleX(1);
+        background-position: 100% 0%;
+    }
+
+    100% {
+        opacity: 0;
+        transform: scaleX(1);
+    }
+}
+
+/* Daily Quests In-Page View Title & Shared Retro Pixel Title */
+#home-screen .daily-quests-title,
+#home-screen .daily-quests-container .pixel-title {
+    font-size: clamp(2.3rem, 5.2vw, 3.2rem);
+    gap: 0.08em;
+    margin-top: 4vh;
+    margin-bottom: 4px;
+    color: #f3c237;
+    text-shadow:
+        -2px -2px 0 #111,
+        2px -2px 0 #111,
+        -2px 2px 0 #111,
+        2px 2px 0 #111,
+        0px 4px 0 #b37307;
+}
+
+.pixel-title {
+    font-weight: bold;
+    font-style: italic;
+    text-align: center;
+    flex-shrink: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.12em;
+    font-size: clamp(4.5rem, 11vw, 6rem);
+    color: #f3c237;
+    margin-top: 3.5vh;
+    padding-top: 6px;
+    padding-bottom: 6px;
+    user-select: none;
+    -webkit-user-select: none;
+
+    /* Crea l'effetto di bordo/ombra scura tipico dei giochi retro */
+    text-shadow:
+        -3px -3px 0 #111,
+        3px -3px 0 #111,
+        -3px 3px 0 #111,
+        3px 3px 0 #111,
+        0px 4px 0 #b37307;
+}
+
+/* Leggero Effetto Text Wave - Una lettera alla volta (SHOP, VAULT, DAILY QUESTS) */
+.text-wave {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: nowrap;
+}
+
+.text-wave .wave-char {
+    display: inline-block;
+    will-change: transform;
+    animation: retroSingleCharWave var(--wave-duration, 2.2s) ease-in-out infinite;
+    animation-delay: calc(var(--char-idx, 0) * 0.11s);
+}
+
+.text-wave .wave-space {
+    display: inline-block;
+    width: 0.45em;
+    min-width: 0.45em;
+    animation: none;
+}
+
+/* Fallback fluido nel caso in cui le lettere non abbiano span */
+.text-wave:not(:has(.wave-char)) {
+    animation: retroSingleCharWave 2.4s ease-in-out infinite;
+}
+
+@keyframes retroSingleCharWave {
+    0% {
+        transform: translateY(0px);
+    }
+
+    6% {
+        transform: translateY(-15px);
+    }
+
+    12% {
+        transform: translateY(0px);
+    }
+
+    100% {
+        transform: translateY(0px);
+    }
+}
+
+
+
+
+#home-screen .daily-quests-subtitle {
+    font-size: 11.5px;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.85);
+    text-align: center;
+    margin-bottom: 6px;
+    text-shadow: 1px 1px 2px #000;
+    letter-spacing: 0.8px;
+    flex-shrink: 0;
+}
+
+@keyframes dailyBreathing {
+
+    0%,
+    100% {
+        transform: scale(1);
+        color: #ffaa00;
+        text-shadow: 2px 2px 0 #000;
+    }
+
+    50% {
+        transform: scale(1.07);
+        color: #ffd000;
+        text-shadow: 2.5px 2.5px 0 #000;
+    }
+}
+
+#home-screen .daily-quests-container,
+#home-screen .daily-quests-container *,
+#home-screen .shop-cards-container,
+#home-screen .shop-cards-container *,
+#home-screen .tapes-vault-container,
+#home-screen .tapes-vault-container * {
+    touch-action: pan-y !important;
+}
+
+#home-screen .daily-quests-container,
+#home-screen .shop-cards-container,
+#home-screen .tapes-vault-container {
+    width: 100%;
+    flex: 1;
+    min-height: 0;
+    max-height: 100%;
+    overflow-y: scroll;
+    -webkit-overflow-scrolling: touch;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 14px;
+    margin-top: 2vh;
+    padding: 10px 12px 75px 12px;
+    box-sizing: border-box;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 16px, black calc(100% - 16px), transparent 100%);
+    mask-image: linear-gradient(to bottom, transparent 0%, black 16px, black calc(100% - 16px), transparent 100%);
+}
+
+#home-screen .daily-quests-container {
+    gap: 9px;
+    margin-top: 1.5vh;
+    padding: 4px 12px 30px 12px;
+}
+
+#home-screen .daily-quests-container::-webkit-scrollbar,
+#home-screen .shop-cards-container::-webkit-scrollbar,
+#home-screen .tapes-vault-container::-webkit-scrollbar {
+    display: none;
+    width: 0;
+    height: 0;
+}
+
+#home-screen .scroll-dots-indicator {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 0 2px 0;
+    margin-top: -2vh;
+    transform: translateY(-2vh);
+    font-size: 22.4px;
+    color: #ffaa00;
+    text-shadow: 1px 1px 0 #000;
+    flex-shrink: 0;
+    transition: opacity 0.25s ease;
+    pointer-events: none;
+}
+
+#home-screen .scroll-dots-indicator.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+#home-screen .scroll-dots-indicator .dot {
+    animation: dotPulse 1.4s ease-in-out infinite;
+}
+
+#home-screen .scroll-dots-indicator .dot:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+#home-screen .scroll-dots-indicator .dot:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+@keyframes dotPulse {
+
+    0%,
+    100% {
+        opacity: 0.3;
+        transform: translateY(0);
+    }
+
+    50% {
+        opacity: 1;
+        transform: translateY(-3px);
+    }
+}
+
+#home-screen .quest-card-frame {
+    position: relative;
+    width: 100%;
+    min-height: calc(73px + 3.3vh);
+    background: url('../assets/mode-card-bg.png') no-repeat center center / 100% 100%;
+    image-rendering: pixelated;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: calc(9px + 0.5vh) 16px;
+    box-sizing: border-box;
+    gap: 10px;
+    filter: drop-shadow(0 0.3vh 0px rgba(0, 0, 0, 0.6));
+    opacity: 0;
+    transform: translateY(14px) scale(0.97);
+    transition: transform 0.35s cubic-bezier(0.2, 0.9, 0.3, 1), opacity 0.35s ease, filter 0.15s ease;
+}
+
+#home-screen .quest-card-frame.exit-top {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.95);
+}
+
+#home-screen .quest-card-frame.exit-bottom {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+}
+
+#home-screen .quest-card-frame.visible {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+}
+
+#home-screen .quest-card-frame.visible:hover {
+    transform: translateY(0) scale(1.02);
+    filter: brightness(1.08) drop-shadow(0 0.6vh 0px rgba(0, 0, 0, 0.7));
+}
+
+#home-screen .quest-card-frame.completed {
+    background: url('../assets/mode-card-bg-completed.png') no-repeat center center / 100% 100%;
+    cursor: pointer;
+    animation: completedGlowPulse 2.2s ease-in-out infinite;
+}
+
+@keyframes completedGlowPulse {
+
+    0%,
+    100% {
+        filter: drop-shadow(0 0.4vh 0px rgba(0, 0, 0, 0.6)) brightness(1);
+    }
+
+    50% {
+        filter: drop-shadow(0 0.6vh 6px rgba(255, 140, 0, 0.65)) brightness(1.1);
+    }
+}
+
+#home-screen .quest-card-frame.completed .quest-reward {
+    background-color: #ffaa00;
+    color: #000000;
+    font-weight: bold;
+    border: 1.5px solid #000000;
+    box-shadow: 0 2px 0 #000000;
+    animation: rewardBounce 1.2s ease-in-out infinite;
+}
+
+@keyframes rewardBounce {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-3px);
+    }
+}
+
+#home-screen .quest-card-frame.claimed {
+    opacity: 0.55 !important;
+    pointer-events: none;
+    filter: grayscale(0.6) brightness(0.8) !important;
+    animation: none !important;
+}
+
+#home-screen .quest-card-frame.disappearing {
+    opacity: 0 !important;
+    transform: scale(0.8) translateY(-24px) !important;
+    max-height: 0 !important;
+    min-height: 0 !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+    border: none !important;
+    overflow: hidden !important;
+    transition: all 0.45s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+#home-screen .quest-card-frame.claimed .quest-reward {
+    background-color: #44aa44;
+    color: #ffffff;
+    box-shadow: none;
+    animation: none;
+}
+
+.flying-ticket-particle {
+    position: fixed;
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+    image-rendering: pixelated;
+    z-index: 99999;
+    pointer-events: none;
+    filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.5));
+    will-change: left, top, transform, opacity;
+}
+
+#home-screen .ticket-item.hud-punch {
+    animation: hudPunchEffect 0.28s cubic-bezier(0.175, 0.885, 0.32, 1.35);
+}
+
+@keyframes hudPunchEffect {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.38) rotate(-5deg);
+        filter: brightness(1.25);
+    }
+
+    100% {
+        transform: scale(1) rotate(0deg);
+    }
+}
+
+#home-screen .quest-card-info {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    flex: 1;
+    margin-left: calc(0.5vh + 1vw);
+}
+
+#home-screen .quest-card-title {
+    font-size: 11.5px;
+    color: #ffffff;
+    line-height: 1.35;
+    text-shadow: 1px 1px 0 #000;
+}
+
+#home-screen .quest-progress-row {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    width: 100%;
+}
+
+#home-screen .quest-progress-bar {
+    flex: 1;
+    height: 6px;
+    background-color: #111118;
+    border: 1px solid #000;
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+#home-screen .quest-progress-fill {
+    height: 100%;
+    background-color: #00cc66;
+    border-radius: 2px;
+}
+
+#home-screen .quest-progress-text {
+    font-size: 10px;
+    color: #88ffaa;
+    text-shadow: 1px 1px 0 #000;
+    white-space: nowrap;
+}
+
+#home-screen .quest-reward {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12.5px;
+    color: #ffea00;
+    background-color: rgba(0, 0, 0, 0.4);
+    padding: 4px 7px;
+    border: 1px solid #000;
+    border-radius: 4px;
+    flex-shrink: 0;
+}
+
+/* Very High Difficulty Quests - Golden Accent */
+#home-screen .quest-card-frame.difficulty-very-hard .quest-card-title {
+    color: #ffd700;
+    text-shadow: 1px 1px 0 #000;
+}
+
+#home-screen .quest-card-frame.difficulty-very-hard .quest-progress-fill {
+    background-color: #ffaa00;
+}
+
+#home-screen .quest-card-frame.difficulty-very-hard .quest-progress-text {
+    color: #ffe066;
+}
+
+#home-screen .quest-reward-icon {
+    width: 18px;
+    height: 18px;
+    object-fit: contain;
+    image-rendering: pixelated;
+}
+
+/* Shop In-Page View */
+#home-screen .shop-title {
+    font-size: 31.8px;
+    font-weight: bold;
+    color: #ffaa00;
+    text-shadow: 2px 2px 0 #000;
+    margin-top: 1.5vh;
+    margin-bottom: 12px;
+    letter-spacing: 1px;
+    text-align: center;
+    animation: dailyBreathing 3.6s ease-in-out infinite;
+    flex-shrink: 0;
+}
+
+
+
+#home-screen .home-ticket-packs-section {
+    width: 96%;
+    max-width: 420px;
+    margin-bottom: 25px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    box-sizing: border-box;
+}
+
+#home-screen .home-bg-shop-section {
+    gap: 8px;
+}
+
+#home-screen .home-ticket-packs-title {
+    font-weight: bold;
+    color: #ffca28;
+    text-shadow: 1.5px 1.5px 0 #000;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-family: 'Press Start 2P', monospace;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    position: relative;
+}
+
+#home-screen .reset-daily-btn {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 7.5px;
+    background: #1e293b;
+    color: #38bdf8;
+    border: 1px solid #38bdf8;
+    border-radius: 4px;
+    padding: 3px 6px;
+    cursor: pointer;
+    box-shadow: 0 2px 0 rgba(0, 0, 0, 0.6);
+    transition: transform 0.1s ease, filter 0.1s ease, background 0.1s ease;
+    outline: none;
+    line-height: 1;
+}
+
+#home-screen .reset-daily-btn:hover {
+    background: #0284c7;
+    color: #ffffff;
+    filter: brightness(1.15);
+}
+
+#home-screen .reset-daily-btn:active {
+    transform: translateY(2px);
+    box-shadow: 0 0 0 rgba(0, 0, 0, 0.6);
+}
+
+#home-screen .home-ticket-packs-row {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: stretch;
+    width: 100%;
+    gap: 14px;
+}
+
+#home-screen .ticket-pack-card {
+    flex: 0 0 calc(50% - 7px);
+    width: calc(50% - 7px);
+    max-width: 195px;
+    aspect-ratio: 280 / 396;
+    filter: none !important;
+    box-shadow: none !important;
+    padding: 14px 10px 16px 10px;
+    box-sizing: border-box;
+}
+
+#home-screen .ticket-pack-card:hover {
+    filter: none !important;
+    transform: translateY(-4px) scale(1.03);
+}
+
+#home-screen .ticket-pack-card .pack-ticket-icon {
+    width: clamp(52px, 14cqw, 68px);
+    transform: scale(2);
+}
+
+#home-screen .ticket-pack-card .pack-amount-text {
+    font-size: 13px;
+    margin-bottom: 8px;
+}
+
+#home-screen .ticket-pack-card .pack-badge {
+    font-size: 10px;
+    padding: 3px 8px;
+}
+
+#home-screen .ticket-pack-card .pack-buy-btn {
+    font-size: 12px;
+    width: 92%;
+    max-width: 145px;
+}
+
+/* Home Shop Backgrounds & Remove Ads Cards (matching in-game shop item-card) */
+#home-screen .home-shop-card {
+    position: relative;
+    width: 100%;
+    max-width: 420px;
+    aspect-ratio: 652 / 270.18;
+    min-height: clamp(149.6px, 18.8vh, 179.55px);
+    flex-shrink: 0;
+    background: url('../assets/shop/card_frame.png') no-repeat center center / 100% 100%;
+    image-rendering: pixelated;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    box-sizing: border-box;
+    padding: 10px 16px 10px 12px;
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.55);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 0.2s ease;
+    margin-bottom: 0;
+    transform: none;
+}
+
+#home-screen .home-shop-card:hover,
+#home-screen .home-shop-card:focus,
+#home-screen .home-shop-card:active,
+#home-screen .item-card:hover,
+#home-screen .item-card:focus,
+#home-screen .item-card:active {
+    transform: translateY(-2px) scale(1.015);
+    filter: none !important;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.65) !important;
+    outline: none !important;
+}
+
+#home-screen .home-shop-card:active,
+#home-screen .item-card:active {
+    transform: translateY(1px) scale(0.99);
+}
+
+#home-screen .home-shop-card .card-slot-number {
+    position: absolute;
+    top: calc(9px + 1vh);
+    left: 14px;
+    font-family: 'Press Start 2P', monospace, sans-serif;
+    font-size: 9.5px;
+    font-weight: 800;
+    color: #ffffff;
+    text-shadow: 1.5px 1.5px 0px #000000;
+    z-index: 2;
+    letter-spacing: 0.5px;
+    transform: none;
+}
+
+#home-screen .home-shop-card .card-left-col {
+    width: 110px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    flex-shrink: 0;
+    padding: 10px 0 6px 0;
+    box-sizing: border-box;
+    transform: none;
+}
+
+#home-screen .home-shop-card .card-icon-container {
+    width: 68px;
+    height: 68px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+    transform: translate(-2.5vw, 1vh);
+}
+
+#home-screen .home-shop-card .card-icon-container .pink-white-preview-icon,
+#home-screen .home-shop-card .card-icon-container .purple-white-preview-icon,
+#home-screen .home-shop-card .card-icon-container .green-white-preview-icon,
+#home-screen .home-shop-card .card-icon-container .orange-white-preview-icon,
+#home-screen .home-shop-card .card-icon-container .gold-white-preview-icon,
+#home-screen .home-shop-card .card-icon-container .default-blue-preview-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 9px;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.65);
+    flex-shrink: 0;
+}
+
+#home-screen .home-shop-card .card-icon-container .item-icon {
+    width: 52px;
+    height: 52px;
+    object-fit: contain;
+    filter: drop-shadow(0 3px 4px rgba(0, 0, 0, 0.6));
+    animation: none;
+    transform: translateX(-0.5vw);
+}
+
+#home-screen .home-shop-card .rarity-badge {
+    font-family: 'Press Start 2P', monospace, sans-serif;
+    font-size: 8.5px;
+    font-weight: 800;
+    padding: 4px 6px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    pointer-events: none;
+    flex-shrink: 0;
+    text-align: center;
+    max-width: 76px;
+    width: 80%;
+    box-sizing: border-box;
+    transform: translate(calc(-1vw - 1vh), 2vh);
+    background: #6a1b9a !important;
+    color: #ffffff !important;
+    border: 1.5px solid #ba68c8 !important;
+    text-shadow: 1px 1px 0px #000 !important;
+    box-shadow: 0 0 8px rgba(171, 71, 188, 0.8) !important;
+}
+
+#home-screen .home-shop-card .card-info {
+    flex: 1;
+    min-width: 0;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 8px 6px 8px 10px;
+    box-sizing: border-box;
+    gap: 4px;
+    transform: none;
+}
+
+#home-screen .home-shop-card .item-title {
+    font-family: 'Press Start 2P', monospace, sans-serif;
+    font-size: clamp(11.5px, 3.1vw, 14px);
+    font-weight: 800;
+    color: #ffffff;
+    text-shadow: -1.5px -1.5px 0 #000, 1.5px -1.5px 0 #000, -1.5px 1.5px 0 #000, 1.5px 1.5px 0 #000;
+    letter-spacing: 0.5px;
+    line-height: 1.25;
+    text-transform: uppercase;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transform: translateX(calc(-1vw - 1vh));
+    margin-top: 2px;
+}
+
+#home-screen .home-shop-card .item-desc {
+    font-family: 'Press Start 2P', monospace, sans-serif;
+    font-size: clamp(8.25px, 2.2vw, 9.9px);
+    font-weight: 700;
+    color: #dce4ff;
+    text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+    letter-spacing: 0.2px;
+    line-height: 1.35;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    transform: translate(calc(-1vw - 1vh), 1vh);
+    margin: 2px 0 4px 0;
+}
+
+#home-screen .home-shop-card .buy-button-container {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin-top: auto;
+    margin-bottom: 2px;
+    transform: none;
+}
+
+#home-screen .home-shop-card .shop-buy-btn {
+    width: auto;
+    min-width: 130px;
+    height: 38px;
+    background: url('../assets/change_btn_bg.png') no-repeat center center / 100% 100%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 0 16px;
+    font-family: 'Press Start 2P', monospace, sans-serif;
+    font-size: 11.5px;
+    font-weight: 800;
+    color: #ffffff;
+    text-shadow: 1.5px 1.5px 0px #000000;
+    cursor: pointer;
+    border: none;
+    outline: none;
+    image-rendering: pixelated;
+    transition: transform 0.1s ease, filter 0.1s ease;
+    filter: drop-shadow(0 2px 0 rgba(0, 0, 0, 0.4));
+    box-sizing: border-box;
+}
+
+#home-screen .home-shop-card .shop-buy-btn .btn-ticket-icon {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+    image-rendering: pixelated;
+    filter: drop-shadow(0 1px 1px #000);
+}
+
+#home-screen .home-shop-card .shop-buy-btn .shop-price-text {
+    font-size: 12.5px;
+    color: #ffffff;
+    text-shadow: 1.5px 1.5px 0 #000;
+    letter-spacing: 0.5px;
+}
+
+#home-screen .home-shop-card .shop-buy-btn:hover {
+    transform: scale(1.04);
+    filter: brightness(1.12);
+}
+
+#home-screen .home-shop-card .shop-buy-btn:active {
+    transform: scale(0.96);
+    filter: brightness(0.95);
+}
+
+#home-screen .home-shop-card .shop-buy-btn.equipped {
+    background: url('../assets/equipped-btn-bg.png') no-repeat center center / 100% 100%;
+    filter: brightness(0.88);
+}
+
+#home-screen .home-shop-card .shop-buy-btn.owned {
+    background: url('../assets/equipped-btn-bg.png') no-repeat center center / 100% 100%;
+}
+
+#home-screen .shop-card-frame {
+    position: relative;
+    width: 95%;
+    max-width: 380px;
+    min-height: clamp(201.6px, 13.5vh, 237.6px);
+    background: url('../assets/shop-card-bg.png') no-repeat center center / 100% 100%;
+    image-rendering: pixelated;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 20px;
+    box-sizing: border-box;
+    filter: drop-shadow(0 0.6vh 0px rgba(0, 0, 0, 0.7));
+    transition: transform 0.15s ease, filter 0.15s ease;
+}
+
+#home-screen .shop-card-frame-bg {
+    position: relative;
+    width: 95%;
+    max-width: 380px;
+    min-height: clamp(201.6px, 13.5vh, 237.6px);
+    background: url('../assets/shop-card-bg.png') no-repeat center center / 100% 100%;
+    image-rendering: pixelated;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 20px;
+    box-sizing: border-box;
+    filter: drop-shadow(0 0.6vh 0px rgba(0, 0, 0, 0.7));
+    transition: transform 0.15s ease, filter 0.15s ease;
+    margin-top: 25px;
+
+}
+
+#home-screen .shop-card-frame:hover {
+    transform: scale(1.02);
+    filter: brightness(1.06) drop-shadow(0 0.8vh 0px rgba(0, 0, 0, 0.8));
+}
+
+#home-screen .shop-card-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    margin-top: 2px;
+}
+
+#home-screen .shop-card-icon {
+    width: 46px;
+    height: 46px;
+    object-fit: contain;
+    image-rendering: pixelated;
+    filter: drop-shadow(0 2px 0 #000);
+}
+
+#home-screen .shop-card-title {
+    font-size: 16.5px;
+    color: #ffcc00;
+    text-shadow: 1.5px 1.5px 0 #000;
+    text-align: center;
+    letter-spacing: 0.5px;
+    line-height: 1.3;
+}
+
+#home-screen .shop-card-desc {
+    font-size: 12px;
+    color: #dce4ff;
+    text-shadow: 1px 1px 0 #000;
+    text-align: center;
+    line-height: 1.5;
+    padding: 0 8px;
+    margin: 8px 0;
+}
+
+#home-screen .shop-price-box {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: -36px;
+    position: relative;
+    z-index: 5;
+}
+
+#home-screen .shop-buy-btn {
+    color: #ffffff;
+    background: url('../assets/equipped-btn-bg.png') no-repeat center center / 100% 100%;
+    border: none;
+    font-weight: bold;
+    box-shadow: none;
+    text-shadow: 1.5px 1.5px 0 #000000;
+    padding: 10px 24px;
+    min-width: 150px;
+    height: 42px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+    cursor: pointer;
+    outline: none;
+    filter: drop-shadow(0 3px 0px rgba(0, 0, 0, 0.5));
+    transition: transform 0.1s ease, filter 0.15s ease;
+}
+
+#home-screen .shop-buy-btn:hover {
+    filter: brightness(1.15) drop-shadow(0 3px 0px rgba(0, 0, 0, 0.5));
+}
+
+#home-screen .shop-buy-btn:active {
+    transform: translateY(2px);
+    filter: brightness(0.95) drop-shadow(0 1px 0px rgba(0, 0, 0, 0.5));
+}
+
+#home-screen .shop-price-text {
+    font-size: 17.3px;
+    color: #ffffff;
+    text-shadow: 1.5px 1.5px 0 #000;
+    letter-spacing: 0.5px;
+}
+
+/* Daily Reward Pack Card in Ticket Packs Grid */
+
+#home-screen .ticket-pack-card.daily-reward-pack-card .daily-badge {
+    background: #ff9100;
+    color: #ffffff;
+    font-weight: bold;
+    border: 1px solid #ffffff;
+    text-shadow: 1px 1px 0 #000;
+}
+
+#home-screen .ticket-pack-card.daily-reward-pack-card .daily-badge.ad-mode {
+    background: #00a455;
+    color: #ffffff;
+    font-weight: bold;
+    border: 1px solid #ffffff;
+    text-shadow: 1px 1px 0 #000;
+}
+
+#home-screen .ticket-pack-card.daily-reward-pack-card .daily-badge.claimed-mode {
+    background: #555555;
+    color: #cccccc;
+    text-shadow: none;
+}
+
+/* Free ticket claim button: Orange like equip button */
+#home-screen .ticket-pack-card.daily-reward-pack-card .daily-pack-btn {
+    background: url('../assets/owned-btn-bg.png') no-repeat center center / 100% 100% !important;
+    border: none !important;
+    box-shadow: none !important;
+    color: #ffffff !important;
+    text-shadow: 1.5px 1.5px 0 #000000 !important;
+    cursor: pointer;
+    font-weight: bold;
+    filter: drop-shadow(0 2px 0px rgba(0, 0, 0, 0.5));
+}
+
+#home-screen .ticket-pack-card.daily-reward-pack-card .daily-pack-btn:hover {
+    filter: brightness(1.15) drop-shadow(0 3px 0px rgba(0, 0, 0, 0.5));
+}
+
+#home-screen .ticket-pack-card.daily-reward-pack-card .daily-pack-btn:active {
+    transform: translateY(2px);
+    filter: brightness(0.95);
+}
+
+/* Watch ad button: Green like normal ticket purchase buttons */
+#home-screen .ticket-pack-card.daily-reward-pack-card .daily-pack-btn.ad-mode {
+    background: url('../assets/ticket-pack-buy-btn.png') no-repeat center center / 100% 100% !important;
+    border: none !important;
+    box-shadow: none !important;
+    color: #ffffff !important;
+    text-shadow: 1.5px 1.5px 0 #000 !important;
+    filter: drop-shadow(0 2px 0px rgba(0, 0, 0, 0.5));
+}
+
+#home-screen .ticket-pack-card.daily-reward-pack-card .daily-pack-btn.ad-mode:hover {
+    filter: brightness(1.15) drop-shadow(0 3px 0px rgba(0, 0, 0, 0.5));
+}
+
+#home-screen .ticket-pack-card.daily-reward-pack-card .daily-pack-btn.ad-mode:active {
+    transform: translateY(2px);
+    filter: brightness(0.95);
+}
+
+#home-screen .ticket-pack-card.daily-reward-pack-card .daily-pack-btn.claimed-mode {
+    background: #555555 !important;
+    color: #888888 !important;
+    box-shadow: 0 4px 0 #333333 !important;
+    pointer-events: none;
+    opacity: 0.65;
+}
+
+/* Vault / Tapes Inventory In-Page View */
+#home-screen .vault-title {
+    font-size: 31.8px;
+    font-weight: bold;
+    color: #ffaa00;
+    text-shadow: 2px 2px 0 #000;
+    margin-top: 1.5vh;
+    margin-bottom: 12px;
+    letter-spacing: 1px;
+    text-align: center;
+    animation: dailyBreathing 3.6s ease-in-out infinite;
+    flex-shrink: 0;
+}
+
+#home-screen .tapes-vault-container {
+    padding: 10px 12px 85px 12px;
+}
+
+/* Vault Cards styling matching Shop Cards */
+#home-screen .shop-card-frame.vault-card-frame {
+    margin-top: 2px;
+    margin-bottom: 18px;
+    min-height: clamp(230px, 16vh, 275px);
+}
+
+#home-screen .shop-card-frame.vault-card-frame .tapes-row-3d {
+    margin-top: 0;
+    margin-bottom: 6px;
+    width: 100%;
+    justify-content: space-evenly;
+}
+
+#home-screen .shop-card-frame.vault-card-frame .tape-img-wrapper {
+    width: clamp(80px, 20vw, 105px);
+    height: clamp(95px, 18vh, 120px);
+}
+
+#home-screen .shop-card-frame.vault-card-frame .vault-tape-img {
+    width: clamp(90px, 22vw, 115px);
+}
+
+#home-screen .shop-card-frame.vault-card-frame .bg-carousel-container {
+    margin-top: 6px;
+    margin-bottom: 4px;
+    width: 100%;
+}
+
+
+#home-screen .tapes-row-3d {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    gap: 6px;
+    width: 100%;
+    margin-top: 5vh;
+}
+
+#home-screen .tape-card-3d {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    padding: 4px 2px;
+}
+
+#home-screen .tape-img-wrapper {
+    position: relative;
+    width: clamp(85px, 22vw, 110px);
+    height: clamp(105px, 25vh, 135px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#home-screen .vault-tape-img {
+    width: clamp(98px, 25vw, 126px);
+    height: auto;
+    image-rendering: pixelated;
+    transform: rotate(90deg);
+    filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.75));
+    animation: subtleTapeWave 3.2s ease-in-out infinite;
+}
+
+#home-screen .vault-tape-img.wave-1 {
+    animation-delay: 0s;
+}
+
+#home-screen .vault-tape-img.wave-2 {
+    animation-delay: 0.35s;
+}
+
+#home-screen .vault-tape-img.wave-3 {
+    animation-delay: 0.7s;
+}
+
+@keyframes subtleTapeWave {
+
+    0%,
+    100% {
+        transform: rotate(90deg) translateX(0px);
+    }
+
+    50% {
+        transform: rotate(90deg) translateX(-6px);
+    }
+}
+
+#home-screen .vault-set-action {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin-top: 4px;
+}
+
+#home-screen .vault-set-btn {
+    font-size: 11.5px;
+    font-family: 'Press Start 2P', monospace, sans-serif;
+    padding: 8px 22px;
+    border-radius: 5px;
+    cursor: pointer;
+    outline: none;
+    text-shadow: 1px 1px 0 #000;
+    transition: transform 0.1s ease, filter 0.15s ease;
+}
+
+#home-screen .vault-set-btn.equipped,
+#home-screen .shop-buy-btn.equipped {
+    color: #ffffff;
+    background: url('../assets/equipped-btn-bg.png') no-repeat center center / 100% 100% !important;
+    border: none !important;
+    font-weight: bold;
+    box-shadow: none;
+    text-shadow: 1.5px 1.5px 0 #000000;
+    padding: 10px 24px;
+    min-width: 140px;
+    height: 40px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+    filter: drop-shadow(0 3px 0px rgba(0, 0, 0, 0.5));
+}
+
+/* --- PINK & LIGHT PINK CHECKERBOARD THEME STYLES --- */
+body.theme-pink-white .sfondo-dinamico,
+body.theme-pink-white .sfondo-dinamico-game {
+    background-color: #ffd6e0 !important;
+    background-image:
+        linear-gradient(45deg, #ff6699 25%, transparent 25%, transparent 75%, #ff6699 75%, #ff6699),
+        linear-gradient(45deg, #ff6699 25%, transparent 25%, transparent 75%, #ff6699 75%, #ff6699) !important;
+}
+
+body.theme-pink-white .sfondo-dinamico::after,
+body.theme-pink-white .sfondo-dinamico-game::after {
+    background: radial-gradient(ellipse at center,
+            rgba(255, 214, 224, 0.25) 0%,
+            rgba(255, 102, 153, 0.45) 50%,
+            rgba(199, 21, 133, 0.75) 100%) !important;
+}
+
+body.theme-pink-white #game-over {
+    background: radial-gradient(circle at center, #d84b7a 0%, #ad1457 60%, #4a0827 100%) !important;
+    background-color: #ad1457 !important;
+}
+
+body.theme-pink-white #game-over.new-high-score {
+    background: radial-gradient(circle at center, #ff6699 0%, #c2185b 60%, #5c082e 100%) !important;
+    background-color: #c2185b !important;
+}
+
+/* Blue & Light Blue Preview Icon */
+.default-blue-preview-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 8px;
+    border: 2px solid #ffffff;
+    box-shadow: 0 3px 0 #000;
+    background-color: #4D84D1;
+    background-image:
+        linear-gradient(45deg, #1F54C8 25%, transparent 25%, transparent 75%, #1F54C8 75%, #1F54C8),
+        linear-gradient(45deg, #1F54C8 25%, transparent 25%, transparent 75%, #1F54C8 75%, #1F54C8);
+    background-size: 20px 20px;
+    background-position: 0 0, 10px 10px;
+    animation: muoviScacchieraPreview 8s linear infinite;
+}
+
+/* Pink & Light Pink Preview Icon in Shop Card */
+.pink-white-preview-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 8px;
+    border: 2px solid #ffffff;
+    box-shadow: 0 3px 0 #000;
+    background-color: #ffd6e0;
+    background-image:
+        linear-gradient(45deg, #ff6699 25%, transparent 25%, transparent 75%, #ff6699 75%, #ff6699),
+        linear-gradient(45deg, #ff6699 25%, transparent 25%, transparent 75%, #ff6699 75%, #ff6699);
+    background-size: 20px 20px;
+    background-position: 0 0, 10px 10px;
+    animation: muoviScacchieraPreview 8s linear infinite;
+}
+
+/* --- PURPLE & LIGHT PURPLE CHECKERBOARD THEME STYLES --- */
+body.theme-purple-white .sfondo-dinamico,
+body.theme-purple-white .sfondo-dinamico-game {
+    background-color: #e0b0ff !important;
+    background-image:
+        linear-gradient(45deg, #8a2be2 25%, transparent 25%, transparent 75%, #8a2be2 75%, #8a2be2),
+        linear-gradient(45deg, #8a2be2 25%, transparent 25%, transparent 75%, #8a2be2 75%, #8a2be2) !important;
+}
+
+body.theme-purple-white .sfondo-dinamico::after,
+body.theme-purple-white .sfondo-dinamico-game::after {
+    background: radial-gradient(ellipse at center,
+            rgba(224, 176, 255, 0.25) 0%,
+            rgba(138, 43, 226, 0.45) 50%,
+            rgba(75, 0, 130, 0.75) 100%) !important;
+}
+
+body.theme-purple-white #game-over {
+    background: radial-gradient(circle at center, #7c3aed 0%, #581c87 60%, #2e084e 100%) !important;
+    background-color: #581c87 !important;
+}
+
+body.theme-purple-white #game-over.new-high-score {
+    background: radial-gradient(circle at center, #9333ea 0%, #6b21a8 60%, #3b0764 100%) !important;
+    background-color: #6b21a8 !important;
+}
+
+/* Purple & Light Purple Preview Icon in Shop Card */
+.purple-white-preview-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 8px;
+    border: 2px solid #ffffff;
+    box-shadow: 0 3px 0 #000;
+    background-color: #e0b0ff;
+    background-image:
+        linear-gradient(45deg, #8a2be2 25%, transparent 25%, transparent 75%, #8a2be2 75%, #8a2be2),
+        linear-gradient(45deg, #8a2be2 25%, transparent 25%, transparent 75%, #8a2be2 75%, #8a2be2);
+    background-size: 20px 20px;
+    background-position: 0 0, 10px 10px;
+    animation: muoviScacchieraPreview 8s linear infinite;
+}
+
+/* --- GREEN & LIGHT GREEN CHECKERBOARD THEME STYLES --- */
+body.theme-green-white .sfondo-dinamico,
+body.theme-green-white .sfondo-dinamico-game {
+    background-color: #bbf7d0 !important;
+    background-image:
+        linear-gradient(45deg, #10b981 25%, transparent 25%, transparent 75%, #10b981 75%, #10b981),
+        linear-gradient(45deg, #10b981 25%, transparent 25%, transparent 75%, #10b981 75%, #10b981) !important;
+}
+
+body.theme-green-white .sfondo-dinamico::after,
+body.theme-green-white .sfondo-dinamico-game::after {
+    background: radial-gradient(ellipse at center,
+            rgba(187, 247, 208, 0.25) 0%,
+            rgba(16, 185, 129, 0.45) 50%,
+            rgba(6, 78, 59, 0.75) 100%) !important;
+}
+
+body.theme-green-white #game-over {
+    background: radial-gradient(circle at center, #10b981 0%, #047857 60%, #022c22 100%) !important;
+    background-color: #047857 !important;
+}
+
+body.theme-green-white #game-over.new-high-score {
+    background: radial-gradient(circle at center, #34d399 0%, #059669 60%, #064e3b 100%) !important;
+    background-color: #059669 !important;
+}
+
+.green-white-preview-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 8px;
+    border: 2px solid #ffffff;
+    box-shadow: 0 3px 0 #000;
+    background-color: #bbf7d0;
+    background-image:
+        linear-gradient(45deg, #10b981 25%, transparent 25%, transparent 75%, #10b981 75%, #10b981),
+        linear-gradient(45deg, #10b981 25%, transparent 25%, transparent 75%, #10b981 75%, #10b981);
+    background-size: 20px 20px;
+    background-position: 0 0, 10px 10px;
+    animation: muoviScacchieraPreview 8s linear infinite;
+}
+
+/* --- ORANGE & LIGHT ORANGE CHECKERBOARD THEME STYLES --- */
+body.theme-orange-white .sfondo-dinamico,
+body.theme-orange-white .sfondo-dinamico-game {
+    background-color: #fed7aa !important;
+    background-image:
+        linear-gradient(45deg, #f97316 25%, transparent 25%, transparent 75%, #f97316 75%, #f97316),
+        linear-gradient(45deg, #f97316 25%, transparent 25%, transparent 75%, #f97316 75%, #f97316) !important;
+}
+
+body.theme-orange-white .sfondo-dinamico::after,
+body.theme-orange-white .sfondo-dinamico-game::after {
+    background: radial-gradient(ellipse at center,
+            rgba(254, 215, 170, 0.25) 0%,
+            rgba(249, 115, 22, 0.45) 50%,
+            rgba(124, 45, 18, 0.75) 100%) !important;
+}
+
+body.theme-orange-white #game-over {
+    background: radial-gradient(circle at center, #ea580c 0%, #c2410c 60%, #431407 100%) !important;
+    background-color: #c2410c !important;
+}
+
+body.theme-orange-white #game-over.new-high-score {
+    background: radial-gradient(circle at center, #fb923c 0%, #ea580c 60%, #7c2d12 100%) !important;
+    background-color: #ea580c !important;
+}
+
+.orange-white-preview-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 8px;
+    border: 2px solid #ffffff;
+    box-shadow: 0 3px 0 #000;
+    background-color: #fed7aa;
+    background-image:
+        linear-gradient(45deg, #f97316 25%, transparent 25%, transparent 75%, #f97316 75%, #f97316),
+        linear-gradient(45deg, #f97316 25%, transparent 25%, transparent 75%, #f97316 75%, #f97316);
+    background-size: 20px 20px;
+    background-position: 0 0, 10px 10px;
+    animation: muoviScacchieraPreview 8s linear infinite;
+}
+
+/* --- GOLD & LIGHT GOLD CHECKERBOARD THEME STYLES --- */
+body.theme-gold-white .sfondo-dinamico,
+body.theme-gold-white .sfondo-dinamico-game {
+    background-color: #fef08a !important;
+    background-image:
+        linear-gradient(45deg, #eab308 25%, transparent 25%, transparent 75%, #eab308 75%, #eab308),
+        linear-gradient(45deg, #eab308 25%, transparent 25%, transparent 75%, #eab308 75%, #eab308) !important;
+}
+
+body.theme-gold-white .sfondo-dinamico::after,
+body.theme-gold-white .sfondo-dinamico-game::after {
+    background: radial-gradient(ellipse at center,
+            rgba(254, 240, 138, 0.28) 0%,
+            rgba(234, 179, 8, 0.48) 50%,
+            rgba(113, 63, 18, 0.82) 100%) !important;
+}
+
+body.theme-gold-white #game-over {
+    background: radial-gradient(circle at center, #f59e0b 0%, #b45309 60%, #451a03 100%) !important;
+    background-color: #b45309 !important;
+}
+
+body.theme-gold-white #game-over.new-high-score {
+    background: radial-gradient(circle at center, #fde047 0%, #eab308 60%, #713f12 100%) !important;
+    background-color: #eab308 !important;
+}
+
+.gold-white-preview-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 8px;
+    border: 2px solid #ffffff;
+    box-shadow: 0 3px 0 #000;
+    background-color: #fef08a;
+    background-image:
+        linear-gradient(45deg, #eab308 25%, transparent 25%, transparent 75%, #eab308 75%, #eab308),
+        linear-gradient(45deg, #eab308 25%, transparent 25%, transparent 75%, #eab308 75%, #eab308);
+    background-size: 20px 20px;
+    background-position: 0 0, 10px 10px;
+    animation: muoviScacchieraPreview 8s linear infinite;
+}
+
+/* Ticket Buy & Price Buttons (Green Pixel Art Frame like Equipped) */
+#home-screen .shop-buy-btn.buy-price-btn,
+#home-screen .vault-set-btn.buy-price-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    color: #ffffff;
+    background: url('../assets/equipped-btn-bg.png') no-repeat center center / 100% 100%;
+    border: none;
+    font-weight: bold;
+    box-shadow: none;
+    text-shadow: 1.5px 1.5px 0 #000000;
+    padding: 10px 24px;
+    min-width: 140px;
+    height: 40px;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+    filter: drop-shadow(0 3px 0px rgba(0, 0, 0, 0.5));
+    cursor: pointer;
+    transition: transform 0.1s ease, filter 0.15s ease;
+}
+
+#home-screen .shop-buy-btn.buy-price-btn:hover,
+#home-screen .vault-set-btn.buy-price-btn:hover {
+    transform: scale(1.04);
+    filter: brightness(1.1) drop-shadow(0 4px 0px rgba(0, 0, 0, 0.6));
+}
+
+#home-screen .shop-buy-btn.buy-price-btn:active,
+#home-screen .vault-set-btn.buy-price-btn:active {
+    transform: scale(0.96);
+    filter: brightness(0.95);
+}
+
+#home-screen .shop-buy-btn *,
+#home-screen .vault-set-btn * {
+    pointer-events: none;
+}
+
+#home-screen .shop-buy-btn .btn-ticket-icon,
+#home-screen .vault-set-btn .btn-ticket-icon {
+    width: 22px;
+    height: 22px;
+    object-fit: contain;
+    filter: drop-shadow(0 1px 2px #000);
+    image-rendering: pixelated;
+}
+
+/* --- VAULT BACKGROUNDS SELECTION (Shop Card + Expandable Drawer) --- */
+#home-screen .vault-bg-shop-card {
+    margin-bottom: 0;
+}
+
+#home-screen .vault-bg-select-drawer {
+    width: 100%;
+    max-width: 420px;
+    overflow: hidden;
+    transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.25s ease, margin 0.25s ease;
+    max-height: 500px;
+    opacity: 1;
+    margin-top: -6px;
+    box-sizing: border-box;
+}
+
+#home-screen .vault-bg-select-drawer.hidden {
+    max-height: 0;
+    opacity: 0;
+    margin-top: 0;
+    pointer-events: none;
+    display: block !important;
+}
+
+#home-screen .vault-bg-select-frame {
+    background: url('../assets/bg_select_frame.png') no-repeat center center / 100% 100%;
+    image-rendering: pixelated;
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.6);
+    padding: 24px 18px 24px 18px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    border: none;
+    border-radius: 0;
+}
+
+#home-screen .vault-bg-select-header {
+    width: 100%;
+    text-align: center;
+    padding-bottom: 2px;
+    border-bottom: none;
+}
+
+#home-screen .vault-bg-select-title {
+    font-family: 'Press Start 2P', monospace, sans-serif;
+    font-size: 13.8px;
+    color: #ffffff !important;
+    text-shadow: -1.5px -1.5px 0 #000, 1.5px -1.5px 0 #000, -1.5px 1.5px 0 #000, 1.5px 1.5px 0 #000 !important;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+}
+
+#home-screen .vault-bg-select-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+#home-screen .vault-bg-select-item {
+    background: #141a29;
+    border: 2px solid #2d3748;
+    border-radius: 8px;
+    padding: 4px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.4);
+    transition: transform 0.16s ease, border-color 0.16s ease;
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
+    box-sizing: border-box;
+    width: 100%;
+}
+
+#home-screen .vault-bg-select-item:hover {
+    transform: translateY(-2px);
+    border-color: #60a5fa;
+}
+
+#home-screen .vault-bg-select-item:active {
+    transform: scale(0.96);
+}
+
+#home-screen .vault-bg-select-item.equipped {
+    border-color: #38bdf8;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.4);
+    background: #1e263d;
+}
+
+#home-screen .vault-bg-select-item.locked {
+    opacity: 0.6;
+    filter: grayscale(0.5);
+}
+
+#home-screen .vault-bg-select-thumb {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    border-radius: 5px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+#home-screen .vault-bg-select-thumb .vault-bg-tile-preview {
+    width: 100%;
+    height: 100%;
+}
+
+#home-screen .vault-bg-tile-preview {
+    width: 100%;
+    height: 100%;
+    border-radius: 4px;
+    image-rendering: pixelated;
+}
+
+#home-screen .vault-bg-lock-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#home-screen .vault-bg-lock-icon {
+    font-size: 13px;
+}
+
+#home-screen .vault-change-bg-btn {
+    background: url('../assets/change_btn_bg.png') no-repeat center center / 100% 100% !important;
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.5) !important;
+}
+
+#home-screen .vault-change-bg-btn:hover {
+    transform: translateY(-2px) scale(1.02);
+    filter: brightness(1.1);
+}
+
+#home-screen .vault-change-bg-btn:active {
+    transform: translateY(1px) scale(0.98);
+    filter: brightness(0.95);
+}
+
+#home-screen .vault-bg-card-header .bg-carousel-title,
+.bg-carousel-title {
+    font-size: 14.3px;
+    font-family: 'Press Start 2P', monospace;
+    color: #ffcc00;
+    text-shadow: 2px 2px 0 #000;
+    text-align: center;
+    letter-spacing: 0.8px;
+    min-height: 20px;
+    line-height: 20px;
+}
+
+/* Background Previews (Both Grid Tiles and Large Previews) */
+.bg-preview-large {
+    width: 115px;
+    height: 62px;
+    border-radius: 6px;
+    border: 2px solid #ffffff;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.6);
+    image-rendering: pixelated;
+    transition: all 0.2s ease;
+}
+
+.bg-preview-large.default-blue,
+.vault-bg-tile-preview.default-blue {
+    background-color: #4D84D1;
+    background-image:
+        linear-gradient(45deg, #1F54C8 25%, transparent 25%, transparent 75%, #1F54C8 75%, #1F54C8),
+        linear-gradient(45deg, #1F54C8 25%, transparent 25%, transparent 75%, #1F54C8 75%, #1F54C8);
+    background-size: 20px 20px;
+    background-position: 0 0, 10px 10px;
+}
+
+.bg-preview-large.pink-white,
+.vault-bg-tile-preview.pink-white {
+    background-color: #ffd6e0;
+    background-image:
+        linear-gradient(45deg, #ff6699 25%, transparent 25%, transparent 75%, #ff6699 75%, #ff6699),
+        linear-gradient(45deg, #ff6699 25%, transparent 25%, transparent 75%, #ff6699 75%, #ff6699);
+    background-size: 20px 20px;
+    background-position: 0 0, 10px 10px;
+}
+
+.bg-preview-large.purple-white,
+.vault-bg-tile-preview.purple-white {
+    background-color: #e0b0ff;
+    background-image:
+        linear-gradient(45deg, #8a2be2 25%, transparent 25%, transparent 75%, #8a2be2 75%, #8a2be2),
+        linear-gradient(45deg, #8a2be2 25%, transparent 25%, transparent 75%, #8a2be2 75%, #8a2be2);
+    background-size: 20px 20px;
+    background-position: 0 0, 10px 10px;
+}
+
+.bg-preview-large.green-white,
+.vault-bg-tile-preview.green-white {
+    background-color: #bbf7d0;
+    background-image:
+        linear-gradient(45deg, #10b981 25%, transparent 25%, transparent 75%, #10b981 75%, #10b981),
+        linear-gradient(45deg, #10b981 25%, transparent 25%, transparent 75%, #10b981 75%, #10b981);
+    background-size: 20px 20px;
+    background-position: 0 0, 10px 10px;
+}
+
+.bg-preview-large.orange-white,
+.vault-bg-tile-preview.orange-white {
+    background-color: #fed7aa;
+    background-image:
+        linear-gradient(45deg, #f97316 25%, transparent 25%, transparent 75%, #f97316 75%, #f97316),
+        linear-gradient(45deg, #f97316 25%, transparent 25%, transparent 75%, #f97316 75%, #f97316);
+    background-size: 20px 20px;
+    background-position: 0 0, 10px 10px;
+}
+
+.bg-preview-large.gold-white,
+.vault-bg-tile-preview.gold-white {
+    background-color: #fef08a;
+    background-image:
+        linear-gradient(45deg, #eab308 25%, transparent 25%, transparent 75%, #eab308 75%, #eab308),
+        linear-gradient(45deg, #eab308 25%, transparent 25%, transparent 75%, #eab308 75%, #eab308);
+    background-size: 20px 20px;
+    background-position: 0 0, 10px 10px;
+}
+
+/* Animazione fluida e perfetta a scacchiera per le anteprime del Vault */
+#home-screen .vault-bg-tile .vault-bg-tile-preview,
+.bg-preview-large {
+    animation: muoviScacchieraPreview 8s linear infinite;
+}
+
+/* OWNED Button (Orange Pixel Art Frame Uploaded by User) */
+#home-screen .vault-set-btn.owned,
+#home-screen .shop-buy-btn.owned {
+    color: #ffffff;
+    background: url('../assets/owned-btn-bg.png') no-repeat center center / 100% 100% !important;
+    border: none !important;
+    font-weight: bold;
+    box-shadow: none;
+    text-shadow: 1.5px 1.5px 0 #000000;
+    padding: 10px 24px;
+    min-width: 140px;
+    height: 40px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+    filter: drop-shadow(0 3px 0px rgba(0, 0, 0, 0.5));
+    cursor: pointer;
+    transition: transform 0.1s ease, filter 0.15s ease;
+}
+
+#home-screen .vault-set-btn.owned:hover,
+#home-screen .shop-buy-btn.owned:hover {
+    transform: scale(1.04);
+    filter: brightness(1.1) drop-shadow(0 4px 0px rgba(0, 0, 0, 0.6));
+}
+
+#home-screen .vault-set-btn.owned:active,
+#home-screen .shop-buy-btn.owned:active {
+    transform: scale(0.96);
+    filter: brightness(0.95);
+}
+
+/* =========================================================================
+   MATCH FINISH CASSETTE TICKET COLLECT BADGE & ANIMATION
+   ========================================================================= */
+#home-screen .cassette-ticket-reward-badge {
+    position: absolute;
+    top: -24px;
+    left: 50%;
+    transform: translateX(-50%) scale(0);
+    transform-origin: center center;
+    z-index: 40;
+    pointer-events: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    width: clamp(231px, 68vw, 280px);
+    aspect-ratio: 65 / 18;
+    background: url('../assets/ticket-reward-frame.png') no-repeat center center / 100% 100%;
+    border: none;
+    border-radius: 0;
+    padding: 0 10px;
+    box-shadow: none;
+    filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.55));
+    opacity: 0;
+    image-rendering: pixelated;
+    will-change: transform, opacity;
+    transition: transform 0.28s cubic-bezier(0.175, 0.885, 0.32, 1.25), opacity 0.2s ease;
+}
+
+#home-screen .cassette-ticket-reward-badge.badge-pop-in {
+    transform: translateX(-50%) scale(1);
+    opacity: 1;
+}
+
+#home-screen .cassette-ticket-reward-badge.badge-pop-out {
+    transform: translateX(-50%) scale(1.1) translateY(-10px);
+    opacity: 0;
+    transition: transform 0.24s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s ease;
+}
+
+#home-screen .cassette-ticket-badge-label {
+    font-family: 'Press Start 2P', monospace, sans-serif;
+    font-size: clamp(10px, 2.7vw, 12.5px);
+    font-weight: bold;
+    color: #ffffff;
+    text-shadow:
+        -1.5px -1.5px 0 #000,
+        1.5px -1.5px 0 #000,
+        -1.5px 1.5px 0 #000,
+        1.5px 1.5px 0 #000,
+        0 2px 4px rgba(0, 0, 0, 0.85);
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+    line-height: 1;
+}
+
+#home-screen .cassette-ticket-badge-icon {
+    width: clamp(22px, 5.5vw, 28px);
+    height: clamp(22px, 5.5vw, 28px);
+    object-fit: contain;
+    image-rendering: pixelated;
+    filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.5));
+}
+
+#home-screen .cassette-ticket-badge-count {
+    font-family: 'Press Start 2P', monospace, sans-serif;
+    font-size: clamp(15px, 4vw, 19px);
+    font-weight: 900;
+    color: #4ade80;
+    text-shadow:
+        -1.5px -1.5px 0 #000,
+        1.5px -1.5px 0 #000,
+        -1.5px 1.5px 0 #000,
+        1.5px 1.5px 0 #000,
+        0 2px 4px rgba(0, 0, 0, 0.85);
+    letter-spacing: 0.5px;
+    line-height: 1;
+}
+
+#home-screen .cassette-img.ticket-punch {
+    animation: cassetteTicketPunch 0.35s ease;
+}
+
+@keyframes cassetteTicketPunch {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.05);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}

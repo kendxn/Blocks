@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Retro Cassette Player UI</title>
+    <!-- Google Fonts for pixel perfect retro font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="background-grid"></div>
+
+    <main class="mobile-container">
+        <!-- Top Status Bar (HUD) -->
+        <header class="hud-bar">
+            <!-- Trophy Record Score -->
+            <div class="hud-item trophy-item">
+                <img src="assets/trophie.png" alt="Trophy" class="hud-icon trophy-icon">
+                <div class="hud-text-single">
+                    <span class="hud-val" id="record-count">12950</span>
+                </div>
+            </div>
+
+            <!-- Ticket Count -->
+            <div class="hud-item ticket-item">
+                <img src="assets/ticket.png" alt="Ticket" class="hud-icon ticket-icon">
+                <div class="hud-text-single">
+                    <span class="hud-ticket-val" id="ticket-count">x99</span>
+                </div>
+            </div>
+
+            <!-- Settings Button -->
+            <button class="setting-btn" id="setting-btn" aria-label="Settings">
+                <img src="assets/setting-button.png" alt="Settings">
+            </button>
+        </header>
+
+        <!-- HOME VIEW (Cassette Carousel & Action Buttons) -->
+        <div class="main-view-section" id="home-view">
+            <!-- Cassette Level/Score Header (Centered above cassette) -->
+            <div class="cassette-info-header">
+                <img src="assets/star-icon.png" alt="Header Icon" class="star-icon" id="header-icon">
+                <span class="tape-level" id="tape-level">LVL 1k</span>
+            </div>
+
+            <!-- Cassette Selector Carousel Row -->
+            <section class="cassette-selector">
+                <button class="arrow-btn left-arrow" id="prev-cassette" aria-label="Cassetta Precedente">
+                    <img src="assets/freccia-sinistra-removebg-preview.png" alt="Freccia Sinistra">
+                </button>
+
+                <div class="cassette-display" id="cassette-display">
+                    <div class="cassette-stack-wrapper">
+                        <!-- Left peek edge -->
+                        <img src="assets/cassette-3.png" alt="Previous Cassette Peek" class="cassette-peek peek-left" id="peek-left-img">
+                        
+                        <!-- Main center cassette tape inside wave container -->
+                        <div class="cassette-wave-container">
+                            <img src="assets/cassette-1.png" alt="Retro Cassette Tape" class="cassette-img" id="current-cassette-img">
+                        </div>
+                        
+                        <!-- Right peek edge -->
+                        <img src="assets/cassette-2.png" alt="Next Cassette Peek" class="cassette-peek peek-right" id="peek-right-img">
+                    </div>
+                </div>
+
+                <button class="arrow-btn right-arrow" id="next-cassette" aria-label="Cassetta Successiva">
+                    <img src="assets/freccia-destra-removebg-preview.png" alt="Freccia Destra">
+                </button>
+            </section>
+
+            <!-- Tape Type Title Label (Positioned BELOW the cassette) -->
+            <div class="cassette-title-label" id="tape-title">Classic Tape 5k</div>
+
+            <!-- Main Action Buttons Row -->
+            <section class="action-row">
+                <button class="play-btn" id="play-btn" aria-label="Play Game">
+                    <img src="assets/playbutton.png" alt="PLAY">
+                </button>
+                <button class="gamemode-btn" id="gamemode-btn" aria-label="Game Modes">
+                    <img src="assets/modes-button.png" alt="Game Modes">
+                </button>
+            </section>
+        </div>
+
+        <!-- DAILY QUESTS VIEW (In-page central view replacing cassette when DAILY tab is selected) -->
+        <div class="main-view-section hidden" id="daily-view">
+            <div class="daily-quests-container" id="quests-scroll-area">
+                <div class="daily-quests-title">DAILY QUESTS</div>
+                <!-- Quest 1 (Completed - Facile) -->
+                <div class="quest-card-frame completed" data-reward-amount="1">
+                    <div class="quest-card-info">
+                        <div class="quest-card-title">Gioca 2 partite wild, classic o tempo</div>
+                        <div class="quest-progress-row">
+                            <div class="quest-progress-bar"><div class="quest-progress-fill" style="width: 100%;"></div></div>
+                            <span class="quest-progress-text">2/2</span>
+                        </div>
+                    </div>
+                    <div class="quest-reward">
+                        <img src="assets/ticket.png" alt="Reward" class="quest-reward-icon">
+                        <span class="reward-text">+1</span>
+                    </div>
+                </div>
+
+                <!-- Quest 3 (Completed - Alta) -->
+                <div class="quest-card-frame completed" data-reward-amount="4">
+                    <div class="quest-card-info">
+                        <div class="quest-card-title">Sblocca 10 abilità</div>
+                        <div class="quest-progress-row">
+                            <div class="quest-progress-bar"><div class="quest-progress-fill" style="width: 100%;"></div></div>
+                            <span class="quest-progress-text">10/10</span>
+                        </div>
+                    </div>
+                    <div class="quest-reward">
+                        <img src="assets/ticket.png" alt="Reward" class="quest-reward-icon">
+                        <span class="reward-text">+4</span>
+                    </div>
+                </div>
+
+                <!-- Quest 5 (Completed - Media) -->
+                <div class="quest-card-frame completed" data-reward-amount="2">
+                    <div class="quest-card-info">
+                        <div class="quest-card-title">Elimina 20 colonne</div>
+                        <div class="quest-progress-row">
+                            <div class="quest-progress-bar"><div class="quest-progress-fill" style="width: 100%;"></div></div>
+                            <span class="quest-progress-text">20/20</span>
+                        </div>
+                    </div>
+                    <div class="quest-reward">
+                        <img src="assets/ticket.png" alt="Reward" class="quest-reward-icon">
+                        <span class="reward-text">+2</span>
+                    </div>
+                </div>
+
+                <!-- Quest 2 (Facile) -->
+                <div class="quest-card-frame" data-reward-amount="1">
+                    <div class="quest-card-info">
+                        <div class="quest-card-title">Posiziona 30 pezzi colore X</div>
+                        <div class="quest-progress-row">
+                            <div class="quest-progress-bar"><div class="quest-progress-fill" style="width: 30%;"></div></div>
+                            <span class="quest-progress-text">9/30</span>
+                        </div>
+                    </div>
+                    <div class="quest-reward">
+                        <img src="assets/ticket.png" alt="Reward" class="quest-reward-icon">
+                        <span class="reward-text">+1</span>
+                    </div>
+                </div>
+
+                <!-- Quest 4 (Media) -->
+                <div class="quest-card-frame" data-reward-amount="2">
+                    <div class="quest-card-info">
+                        <div class="quest-card-title">Elimina 20 righe</div>
+                        <div class="quest-progress-row">
+                            <div class="quest-progress-bar"><div class="quest-progress-fill" style="width: 70%;"></div></div>
+                            <span class="quest-progress-text">14/20</span>
+                        </div>
+                    </div>
+                    <div class="quest-reward">
+                        <img src="assets/ticket.png" alt="Reward" class="quest-reward-icon">
+                        <span class="reward-text">+2</span>
+                    </div>
+                </div>
+            </div>
+            <!-- 3 Dots Indicator below visible cards -->
+            <div class="scroll-dots-indicator" id="scroll-dots">
+                <span class="dot">•</span>
+                <span class="dot">•</span>
+                <span class="dot">•</span>
+            </div>
+        </div>
+
+        <!-- SHOP VIEW (In-page central view replacing cassette when SHOP tab is selected) -->
+        <div class="main-view-section hidden" id="shop-view">
+            <div class="shop-title">SHOP</div>
+            <div class="shop-cards-container">
+                <!-- Remove Ads Purchase Card Frame -->
+                <div class="shop-card-frame">
+                    <div class="shop-card-header">
+                        <img src="assets/no-ads-icon.png" alt="No Ads Icon" class="shop-card-icon">
+                        <div class="shop-card-title">REMOVE ADS</div>
+                    </div>
+                    <div class="shop-card-desc">
+                        Enjoy an uninterrupted gameplay experience! Permanently remove all ads from the game.
+                    </div>
+                    <div class="shop-price-box">
+                        <button class="shop-buy-btn" id="buy-no-ads-btn">
+                            <span class="shop-price-text">€ 3.99</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Walkman Deck Section -->
+        <section class="walkman-section">
+            <!-- 4 Top Navigation Tabs enclosed in blue-button.png / orange-button.png -->
+            <div class="walkman-tabs-row">
+                <button class="tab-btn" data-nav="shop">
+                    <img src="assets/shop-icon.png" alt="SHOP" class="tab-icon">
+                </button>
+                <button class="tab-btn" data-nav="inventory">
+                    <img src="assets/inventory-icon.png" alt="INVENTORY" class="tab-icon">
+                </button>
+                <button class="tab-btn active" data-nav="home">
+                    <img src="assets/home--icon.png" alt="HOME" class="tab-icon">
+                </button>
+                <button class="tab-btn" data-nav="daily">
+                    <img src="assets/quest-icon.png" alt="DAILY" class="tab-icon">
+                </button>
+            </div>
+
+            <!-- Main Blue Walkman Body Frame -->
+            <div class="walkman-body-frame">
+                <img src="assets/frame-walkman.png" alt="Walkman Frame" class="frame-bg">
+
+                <!-- Display Window Screen Inside Frame -->
+                <div class="walkman-display-container">
+                    <img src="assets/walkaman-display.png" alt="Walkman Display" class="display-screen" id="display-screen">
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Retro Work In Progress Popup Modal -->
+    <div class="wip-modal-overlay" id="wip-modal">
+        <div class="wip-modal-box">
+            <div class="wip-modal-header">NOTICE</div>
+            <div class="wip-modal-body">COMING SOON</div>
+            <button class="wip-modal-btn" id="wip-modal-close">OK</button>
+        </div>
+    </div>
+
+    <!-- Retro Game Modes Popup Overlay (Floating 3 Cards Only) -->
+    <div class="modes-modal-overlay" id="modes-modal">
+        <div class="modes-cards-container">
+            <!-- Card 1: Classic Tape -->
+            <div class="mode-card" data-mode-index="0">
+                <div class="mode-card-title">CLASSIC TAPE</div>
+                <div class="mode-card-desc">Modalità di gioco classico</div>
+            </div>
+
+            <!-- Card 2: Tempo Tape -->
+            <div class="mode-card" data-mode-index="2">
+                <div class="mode-card-title">TEMPO TAPE</div>
+                <div class="mode-card-desc">Modalità di gioco con 5 min di tempo</div>
+            </div>
+
+            <!-- Card 3: Wild Tape -->
+            <div class="mode-card" data-mode-index="1">
+                <div class="mode-card-title">WILD TAPE</div>
+                <div class="mode-card-desc">Modalità di gioco con le abilità epiche attivate</div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
